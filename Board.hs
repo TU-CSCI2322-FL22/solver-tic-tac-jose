@@ -8,6 +8,8 @@ type LBoard = [[Symbol]]
 
 type BBoard = [[LBoard]]
 
+type Move = ((Int, Int), Symbol)
+
 
 evalList::[[Symbol]] -> [Symbol]
 evalList lst =
