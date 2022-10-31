@@ -61,36 +61,43 @@ bigBoardDiagonalLeft = [[boardNone,boardNone,boardX],
                     [boardNone,boardX,boardNone],
                     [boardX,boardNone,boardNone]]
 
+testLittleBoard =
+    describe "Checking Little Board" $ do
+        it "recognizes horizontal occurences" $ do
+            checkLilBoard horizontalData `shouldBe` X
+        it "board of all None's" $ do
+            checkLilBoard boardNone `shouldBe` None
+        it "board of all X's" $ do
+            checkLilBoard boardX `shouldBe` X
+        it "board of all O's" $ do
+            checkLilBoard boardO `shouldBe` O
+        it "left diagonal X" $ do
+            checkLilBoard crossDataLX `shouldBe` X
+        it "right diagonal X" $ do
+            checkLilBoard crossDataRX `shouldBe` X
+        it "left diagonal O" $ do
+            checkLilBoard crossDataLO `shouldBe` O
+        it "right diagonal O" $ do
+            checkLilBoard crossDataRO `shouldBe` O
+        it "multiple correct wins" $ do
+        evaluate (checkLilBoard multi) `shouldThrow` anyException
+
+testBigBoard =
+    describe "Checking Big Board" $ do
+        it "board of all None's" $ do
+            checkBigBoard bigBoardNone `shouldBe` None
+        it "board of all X's" $ do
+            checkBigBoard bigBoardX `shouldBe` X
+        it "board of all O's" $ do
+            checkBigBoard bigBoardO `shouldBe` O
+        it "left diagonal" $ do
+            checkBigBoard bigBoardDiagonal `shouldBe` X
+        it "right diagonal" $ do
+            checkBigBoard (reverse bigBoardDiagonalLeft) `shouldBe` X
+
 
 runTests = hspec $ do
     describe "Checking Board" $ do
-        describe "Checking Little Board" $ do
-            it "recognizes horizontal occurences" $ do
-                checkLilBoard horizontalData `shouldBe` X
-            it "board of all None's" $ do
-                checkLilBoard boardNone `shouldBe` None
-            it "board of all X's" $ do
-                checkLilBoard boardX `shouldBe` X
-            it "board of all O's" $ do
-                checkLilBoard boardO `shouldBe` O
-            it "left diagonal X" $ do
-                checkLilBoard crossDataLX `shouldBe` X
-            it "right diagonal X" $ do
-                checkLilBoard crossDataRX `shouldBe` X
-            it "left diagonal O" $ do
-                checkLilBoard crossDataLO `shouldBe` O
-            it "right diagonal O" $ do
-                checkLilBoard crossDataRO `shouldBe` O
-            it "multiple correct wins" $ do
-                evaluate (checkLilBoard multi) `shouldThrow` anyException
-        describe "Checking Big Board" $ do
-            it "board of all None's" $ do
-                checkBigBoard bigBoardNone `shouldBe` None
-            it "board of all X's" $ do
-                checkBigBoard bigBoardX `shouldBe` X
-            it "board of all O's" $ do
-                checkBigBoard bigBoardO `shouldBe` O
-            it "left diagonal" $ do
-                checkBigBoard bigBoardDiagonal `shouldBe` X
-            it "right diagonal" $ do
-                checkBigBoard (reverse bigBoardDiagonalLeft) `shouldBe` X
+        testLittleBoard
+        testBigBoard
+
