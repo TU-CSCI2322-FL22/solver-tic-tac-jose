@@ -7,7 +7,7 @@ import Test.Hspec
 import Test.QuickCheck
 import Control.Exception (evaluate)
 import Board
-import Board (checkBigBoard)
+import Board (checkBigBoard, validMoves)
 
 
 horizontalData = [[X,X,X],
@@ -57,9 +57,19 @@ bigBoardO = enlarge boardO
 bigBoardDiagonal = [[boardX,boardNone,boardNone],
                     [boardNone,boardX,boardNone],
                     [boardNone,boardNone,boardX]]
+
 bigBoardDiagonalLeft = [[boardNone,boardNone,boardX],
                     [boardNone,boardX,boardNone],
                     [boardX,boardNone,boardNone]]
+
+bigBoardCorner = [[boardX,boardX,boardX],
+                    [boardX,boardX,boardX],
+                    [boardX,boardX,[[X,X,X],[X,X,X],[X,X,None]]]]
+
+littleSquareX = replicate 3 [X,None,None]
+littleSquareO = replicate 3 [O,None,None]
+bigBoardShortX = enlarge littleSquareX
+bigBoardShortO = enlarge littleSquareO
 
 testLittleBoard =
     describe "Checking Little Board" $ do
@@ -95,9 +105,18 @@ testBigBoard =
         it "right diagonal" $ do
             checkBigBoard (reverse bigBoardDiagonalLeft) `shouldBe` X
 
+testValidMoves =
+    describe "Checking valid moves" $ do
+        it "only right corner open" $ do
+            validMoves bigBoardCorner `shouldBe` [(8,8)]
+        it "no valid moves, filled in with vertical X's" $ do
+            validMoves bigBoardShortX `shouldBe` []
+        it "no valid moves, filled in with vertical O's" $ do
+            validMoves bigBoardShortO `shouldBe` []
+
 
 runTests = hspec $ do
     describe "Checking Board" $ do
         testLittleBoard
         testBigBoard
-
+        testValidMoves
