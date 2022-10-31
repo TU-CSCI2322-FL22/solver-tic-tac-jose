@@ -1,6 +1,6 @@
 # Commands:
 
-name := foo
+name := jose
 
 .PHONY: build init test clean doc deploy stage
 
