@@ -1,14 +1,22 @@
 
 
 module Board where
+import Data.Type.Coercion (sym)
 
-data Symbol = X | O | None deriving (Eq, Show)
+
+data Symbol = X | O | None deriving (Eq)
+
+instance Show Symbol where
+    show X = "X"
+    show O = "O"
+    show None = "_"
 
 type LBoard = [[Symbol]]
 
 type BBoard = [[LBoard]]
 
-type Move = ((Int, Int), Symbol)
+type Location = (Int,Int)
+type Move = (Location, Symbol)
 
 
 evalList::[[Symbol]] -> [Symbol]
@@ -16,18 +24,6 @@ evalList lst =
     foldr (\ x -> (++) [compList x]) [] lst
     where
         compList lst = foldl1 (\a b -> if a == b then a else None) lst
-
-
--- testMini :: [[Symbol]]
--- testMini = [[X,X,X],
---             [X,None,O],
---             [X,O,X]]
-
-testMini :: [[Symbol]]
-testMini = [[X,X,O],
-            [None,X,O],
-            [O,O,X]]
-
 
 checkHoriz :: LBoard -> [Symbol]
 checkHoriz xs =
@@ -56,7 +52,6 @@ listVert lst
 
 checkVert :: LBoard -> [Symbol]
 checkVert lst = do
-    --foldr (\ x -> (++) [evalList x]) [] (listV lst)
     evalList (listVert lst)
 
 checkDiagonal :: [[Symbol]] -> [Symbol]
@@ -79,8 +74,15 @@ checkLilBoard board =
         d = filter(\a -> a /= None) c
     in if null d then None else foldl1 (\a b -> if a == b then a else error "multiple correct spaces") d
 
-    -- filter(\a -> a /= None) c
-    -- [a] ++ [b]
-
+checkBigBoard :: BBoard -> Symbol
 checkBigBoard board =
     checkLilBoard [map checkLilBoard x | x <- board]
+
+
+validMoves :: BBoard -> [Location]
+validMoves = 
+    undefined
+
+playMove :: BBoard -> Move -> BBoard
+playMove =
+    undefined

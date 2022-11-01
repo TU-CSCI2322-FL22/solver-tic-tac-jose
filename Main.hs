@@ -16,6 +16,7 @@ import Control.Exception (evaluate)
 import Board
 import Testing
 import Testing (runTests)
+import System.Console.GetOpt (usageInfo)
 
 data Options = Options {
    optHelp              :: Bool
@@ -68,13 +69,20 @@ helpIO :: IO()
 helpIO = putStrLn $ usageInfo usage options
     where usage = "Usage: ./jose [OPTION]... [file]"
 
+testIO :: IO()
 testIO = putStrLn $ usageInfo usage options
-    where usage = "Usage: ./jose [OPTION]... [file] -- Prints"
+    where usage = "Usage: ./jose [OPTION  asdf]... [file] -- Prints"
 
+-- main = do
+-- 	allArgs <- getArgs
+-- 	let opts = compilerOpts allArgs
+-- 	-- if optHelp opts then helpIO
+-- 	if optTest opts then testIO
+-- 	else do runTests
+
+main :: IO ()
 main = do
-	allArgs <- getArgs
-	let opts = compilerOpts allArgs
-	-- if optHelp opts then helpIO
-	if optTest opts then testIO
-	else do runTests
-	
+  allArgs <- getArgs
+  let opts = compilerOpts allArgs
+  if optHelp opts then helpIO
+  else runTests

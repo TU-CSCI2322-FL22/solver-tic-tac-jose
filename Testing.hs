@@ -114,9 +114,24 @@ testValidMoves =
         it "no valid moves, filled in with vertical O's" $ do
             validMoves bigBoardShortO `shouldBe` []
 
+testPlayMove =
+    describe "Checking playing moves" $ do
+        it "bottom right change" $ do
+            playMove onePre ((8,8),X) `shouldBe` onePost
+        it "top right change" $ do
+            playMove twoPre ((0,0),X) `shouldBe` twoPost
+        it "deny None moves" $ do
+            evaluate(playMove onePre ((8,8),X)) `shouldThrow` anyException
+
+    where single = [[[X,O,O],[O,X,O],[O,O,X]],[[X,X,O],[O,X,O],[O,O,X]],[[X,X,X],[O,X,O],[O,O,X]]]
+          onePre = [single, single,[[[X,O,O],[O,X,O],[O,O,X]],[[X,X,O],[O,X,O],[O,O,X]],[[X,X,X],[O,X,O],[O,O,None]]]]
+          onePost = [single, single,[[[X,O,O],[O,X,O],[O,O,X]],[[X,X,O],[O,X,O],[O,O,X]],[[X,X,X],[O,X,O],[O,O,X]]]]
+          twoPre = [[[[None,O,O],[O,X,O],[O,O,X]],[[X,X,O],[O,X,O],[O,O,X]],[[X,X,X],[O,X,O],[O,O,O]]],single, single]
+          twoPost = [[[[X,O,O],[O,X,O],[O,O,X]],[[X,X,O],[O,X,O],[O,O,X]],[[X,X,X],[O,X,O],[O,O,O]]],single, single]
 
 runTests = hspec $ do
     describe "Checking Board" $ do
         testLittleBoard
         testBigBoard
         testValidMoves
+        testPlayMove
