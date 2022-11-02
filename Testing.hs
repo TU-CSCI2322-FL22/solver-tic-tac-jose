@@ -7,7 +7,10 @@ import Test.Hspec
 import Test.QuickCheck
 import Control.Exception (evaluate)
 import Board
-import Board (checkBigBoard, validMoves)
+import Game
+import Valid
+import Game (isValid)
+-- import Board (checkBigBoard, validMoves)
 
 
 horizontalData = [[X,X,X],
@@ -95,15 +98,15 @@ testLittleBoard =
 testBigBoard =
     describe "Checking Big Board" $ do
         it "board of all None's" $ do
-            checkBigBoard bigBoardNone `shouldBe` None
+            checkWin bigBoardNone `shouldBe` None
         it "board of all X's" $ do
-            checkBigBoard bigBoardX `shouldBe` X
+            checkWin bigBoardX `shouldBe` X
         it "board of all O's" $ do
-            checkBigBoard bigBoardO `shouldBe` O
+            checkWin bigBoardO `shouldBe` O
         it "left diagonal" $ do
-            checkBigBoard bigBoardDiagonal `shouldBe` X
+            checkWin bigBoardDiagonal `shouldBe` X
         it "right diagonal" $ do
-            checkBigBoard (reverse bigBoardDiagonalLeft) `shouldBe` X
+            checkWin (reverse bigBoardDiagonalLeft) `shouldBe` X
 
 testValidMoves =
     describe "Checking valid moves" $ do
@@ -129,9 +132,31 @@ testPlayMove =
           twoPre = [[[[None,O,O],[O,X,O],[O,O,X]],[[X,X,O],[O,X,O],[O,O,X]],[[X,X,X],[O,X,O],[O,O,O]]],single, single]
           twoPost = [[[[X,O,O],[O,X,O],[O,O,X]],[[X,X,O],[O,X,O],[O,O,X]],[[X,X,X],[O,X,O],[O,O,O]]],single, single]
 
+testIsValid =
+    describe "Checking isValid" $ do
+        it "full board top left" $ do
+            isValid bigBoardO ((0,0),X) `shouldBe` False
+        it "full board bottom right" $ do
+            isValid bigBoardO ((8,8),X) `shouldBe` False
+        it "empty board top left" $ do
+            isValid bigBoardNone ((0,0),None) `shouldBe` True
+        it "empty board bottom right" $ do
+            isValid bigBoardNone ((8,8),None) `shouldBe` True
+        it "empty board" $ do
+            isValid bigBoardNone ((8,8),None) `shouldBe` True
+        it "handles negatives" $ do
+            evaluate (isValid bigBoardNone ((-1,-1),None)) `shouldThrow` anyException
+        it "handles bigger than board size " $ do
+            evaluate (isValid bigBoardNone ((9,9),None)) `shouldThrow` anyException
+         
+            
+-- when some are filled in feel free to comment out tests here
+
+runTests :: IO()
 runTests = hspec $ do
     describe "Checking Board" $ do
         testLittleBoard
         testBigBoard
         testValidMoves
         testPlayMove
+        testIsValid
