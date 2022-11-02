@@ -36,12 +36,3 @@ legalMoves board =
 showBoard :: BBoard -> [String]
 showBoard board =
     undefined
-
--- foldIt lst =
---     foldr1 (\a b -> a++"\n" ++b) lst
-
--- printBoard::String -> IO ()
--- printBoard string =
---     do  
---         putStrLn $ string
---         -- foldr1 (\a b -> [a]++["\n"]++b) (string)
