@@ -8,7 +8,7 @@ import Test.QuickCheck
 import Control.Exception (evaluate)
 import Board
 import Game
-import Valid
+-- import Valid
 import Game (isValid)
 -- import Board (checkBigBoard, validMoves)
 
