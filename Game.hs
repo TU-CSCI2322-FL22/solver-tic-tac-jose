@@ -13,42 +13,25 @@ module Game where
 import Board
 
 
--- | Returns if a game has been won
+-- | determines who has won a board
 --
--- takes a BBoard
---
--- returns a symbol representing the winner
---
--- will return None if no winner yet
-checkWin :: BBoard -> Symbol
-checkWin board =
-    checkLilBoard [map checkLilBoard x | x <- board]
-
-
--- | Returns the valid moves from a given board
---
--- takes a BBoard
---
--- returns [Location]
-validMoves :: BBoard -> [Location]
-validMoves = 
+-- need to make a case for where the board is full and it returns Nothing
+winner :: BBoard -> Maybe Player
+winner board =
     undefined
 
--- | Returns the board after making a given move
+-- | returns a board with a move made on it
 --
--- takes a BBoard and Move
---
--- returns a BBoard
-playMove :: BBoard -> Move -> BBoard
-playMove =
+-- what if the move isn't valid? -> Nothing
+makeMove :: BBoard -> Move -> Maybe BBoard
+makeMove board move =
     undefined
 
--- | Returns if a Move is valid on a Board
-isValid :: BBoard -> Move -> Bool
-isValid =
+-- | returns the legal moves for a board
+legalMoves :: BBoard -> [Location]
+legalMoves board =
     undefined
 
-
-
-showBoard =
+showBoard :: BBoard -> [String]
+showBoard board =
     undefined
