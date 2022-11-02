@@ -9,7 +9,7 @@ import Control.Exception (evaluate)
 import Board
 import Game
 -- import Valid
-import Game (isValid)
+-- import Game (isValid)
 -- import Board (checkBigBoard, validMoves)
 
 
