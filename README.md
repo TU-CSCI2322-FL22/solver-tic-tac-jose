@@ -1,3 +1,3 @@
 # game-solver-template
 
-Seth, Quang, Hugh, Brandon
+Seth Owirodu, Quang Le, Hugh Coleman, Brandon Ortiz
