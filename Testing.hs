@@ -13,8 +13,13 @@ import Data.ByteString (putStrLn)
             
 -- when some are filled in feel free to comment ot tests here
 
+milestoneOne =
+    do
+    describe "Milestone 1" $ do
+        it "functional" $ do
+            winner [] `shouldBe` Going
+
 runTests :: IO()
 runTests = hspec $ do
-    describe "Checking Board" $ do
-        it "temporary" $ do
-            1 `shouldBe` 1
+    milestoneOne
+

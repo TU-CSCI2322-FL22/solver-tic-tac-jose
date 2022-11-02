@@ -16,7 +16,7 @@ import Board
 -- | determines who has won a board
 --
 -- need to make a case for where the board is full and it returns Nothing
-winner :: BBoard -> Maybe Player
+winner :: BBoard -> State
 winner board =
     undefined
 
@@ -28,10 +28,20 @@ makeMove board move =
     undefined
 
 -- | returns the legal moves for a board
-legalMoves :: BBoard -> [Location]
+legalMoves :: BBoard -> [Move]
 legalMoves board =
     undefined
 
+-- | prints the board
 showBoard :: BBoard -> [String]
 showBoard board =
     undefined
+
+-- foldIt lst =
+--     foldr1 (\a b -> a++"\n" ++b) lst
+
+-- printBoard::String -> IO ()
+-- printBoard string =
+--     do  
+--         putStrLn $ string
+--         -- foldr1 (\a b -> [a]++["\n"]++b) (string)
