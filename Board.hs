@@ -79,10 +79,10 @@ checkBigBoard board =
     checkLilBoard [map checkLilBoard x | x <- board]
 
 
-validMoves :: BBoard -> [Location]
-validMoves = 
-    undefined
+-- validMoves :: BBoard -> [Location]
+-- validMoves = 
+--     undefined
 
-playMove :: BBoard -> Move -> BBoard
-playMove =
-    undefined
+-- playMove :: BBoard -> Move -> BBoard
+-- playMove =
+--     undefined
