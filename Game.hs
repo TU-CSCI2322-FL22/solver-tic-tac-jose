@@ -13,5 +13,25 @@ module Game where
 import Board
 
 
+-- | determines who has won a board
+--
+-- need to make a case for where the board is full and it returns Nothing
+winner :: BBoard -> Maybe Player
 winner board =
+    undefined
+
+-- | returns a board with a move made on it
+--
+-- what if the move isn't valid? -> Nothing
+makeMove :: BBoard -> Move -> Maybe BBoard
+makeMove board move =
+    undefined
+
+-- | returns the legal moves for a board
+legalMoves :: BBoard -> [Location]
+legalMoves board =
+    undefined
+
+showBoard :: BBoard -> [String]
+showBoard board =
     undefined

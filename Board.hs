@@ -1,23 +1,17 @@
 
 
 module Board where
--- import Data.Type.Coercion (sym)
 
 data Player = X | O deriving (Show)
 
 data Symbol = None | Claimed Player deriving (Show)
 
-type MoveSet = [Symbol]
-
-
-
-type LBoard = [[Symbol]]
-
-type BBoard = [[LBoard]]
-
-
 type Location = (Int,Int)
-type Move = (Location, Symbol)
+type Move = (Location, Player)
 
---LBoard = [(Int,Int)]
---BBoard = (LBoard, LBoard, LBoard)
+-- | a single board
+type LBoard = [Move]
+
+-- | a board of boards
+type BBoard = [LBoard]
+
