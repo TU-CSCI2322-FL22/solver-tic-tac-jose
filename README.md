@@ -1,3 +1,6 @@
 # game-solver-template
 
-Seth Owirodu, Q Le, Hugh Cokman, Brandon Ortiz
+Seth Owirodu
+Quang Le
+Hugh Coleman
+Brandon Ortiz
