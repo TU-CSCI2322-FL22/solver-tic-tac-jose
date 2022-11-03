@@ -57,14 +57,10 @@ testIO = runTests
 main :: IO ()
 main = do
 	args <- getArgs                  -- IO [String]
-	progName <- getProgName          -- IO String
-	putStrLn "The arguments are:"  
-	-- mapM_ putStrLn args
-	putStrLn $ show args
-	putStrLn "The program name is:"  
-	putStrLn progName
 	s <- return $ case args of
 			["-h"] -> "help triggered"
 			["-t"] -> "test triggered"
+			[x] -> "unknown argument"
+			(x:xs) -> "too many arguments"
 			[] -> "empty commands"
 	putStrLn s
