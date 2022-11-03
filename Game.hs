@@ -29,8 +29,8 @@ makeMove board move =
 
 -- | returns the legal moves for a board
 legalMoves :: BBoard -> Turn -> [Move]
-legalMoves board =
-    undefined
+legalMoves board = undefined
+--Q is working on this
 
 
 -- | prints the board
