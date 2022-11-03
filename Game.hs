@@ -74,14 +74,19 @@ pipeRow lst =
     take 3 lst ++ " || " ++ take 3 (takeN 3 lst) ++ " || " ++ take 3 (takeN 6 lst)
 
 pipeVert lst =
-    take 3 lst ++ ["====="] ++ takeN 3 lst
+    take 3 lst ++ [(replicate 17 '=')] ++ take 3 (takeN 3 lst) ++ [(replicate 17 '=')] ++ takeN 6 lst
     
 monadBoard board =
     -- do putStrLn $ foldr1 (\a b -> a++"\n"++b) $ 
     --[foldr1 (++) [pipeRow x | x <- (buildList board)]]
-    do
-        (putStrLn $ head [foldr1 (\a b -> a++"\n"++b) [pipeRow x | x <- (buildList board)]])
+    do  
+        (putStrLn $ makeBoard board)
 
+makeBoard board = 
+    let n = [pipeRow x | x <- (buildList board)]
+        j = pipeVert n
+        v = foldr1 (\a b -> a++"\n"++b) j
+    in v
 
 indexString x
     | x == Nothing = "-"
