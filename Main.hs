@@ -56,6 +56,15 @@ testIO = runTests
 
 main :: IO ()
 main = do
-  allArgs <- getArgs
-  let opts = compilerOpts allArgs
-  if optHelp opts then helpIO else testIO
+	args <- getArgs                  -- IO [String]
+	progName <- getProgName          -- IO String
+	putStrLn "The arguments are:"  
+	-- mapM_ putStrLn args
+	putStrLn $ show args
+	putStrLn "The program name is:"  
+	putStrLn progName
+	s <- return $ case args of
+			["-h"] -> "help triggered"
+			["-t"] -> "test triggered"
+			[] -> "empty commands"
+	putStrLn s
