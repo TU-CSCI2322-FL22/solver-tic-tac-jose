@@ -40,6 +40,18 @@ makeMove :: BBoard -> Move -> BBoard
 makeMove board move =
     undefined
 
+--filtering
+--if it isn't in the 0..8
+--that it's in legal
+
+filterMove:: BBoard -> Move -> Turn -> Bool
+filterMove board (b,s) turn
+    | b < 0 || s < 0 = False
+    | b > 8 || s > 8 = False
+    | (b,s) `elem` options = True
+    | otherwise = False
+    where options = legalMoves board turn
+
 -- | returns the legal moves for a board
 legalMoves :: BBoard -> Turn -> [Move]
 legalMoves board = undefined
