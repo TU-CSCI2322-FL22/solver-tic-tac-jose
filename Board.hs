@@ -20,7 +20,7 @@ type Move = (Integer,Integer)
 --
 --  6,7,8]
 
--- Symbol, then the 
+-- Symbol, then the smallboard position that they played on.
 type Turn = (Player, Integer)
 
 type LBoard = [(Integer,Player)]
