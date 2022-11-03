@@ -19,6 +19,8 @@ type Move = (Integer,Integer)
 --  3,4,5
 --
 --  6,7,8]
+
+-- Symbol, then the 
 type Turn = (Player, Integer)
 
 type LBoard = [(Integer,Player)]

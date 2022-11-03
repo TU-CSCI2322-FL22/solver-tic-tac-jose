@@ -11,7 +11,7 @@ Every function in here should have test cases.
 module Game where
 
 import Board
-import ShowBoardFile
+import ShowBoard
 
 -- | determines who has won a board
 --

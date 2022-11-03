@@ -1,6 +1,6 @@
 
 
-module ShowBoardFile where
+module ShowBoard where
 
 import Board
 
@@ -26,7 +26,7 @@ pipeRow lst =
 -- to change, change the marker
 pipeVert::[String] -> [String]
 pipeVert lst =
-    let marker = replicate 17 '='
+    let marker = replicate 15 '='
     in take 3 lst ++ [marker] ++ take 3 (takeN 3 lst) ++ [marker] ++ takeN 6 lst
 
 -- ^ Converts the data type to String
