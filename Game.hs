@@ -68,9 +68,26 @@ showBoard board =
 -- getPlace move board =
 --     | getIndex move board == Nothing = False
 --     | otherwise == True
-monadBoard board =
-    do putStrLn $ buildList board
 
+pipeRow lst =
+    -- take 3 lst ++ 
+    take 3 lst ++ " || " ++ take 3 (takeN 3 lst) ++ " || " ++ take 3 (takeN 6 lst)
+
+pipeVert lst =
+    take 3 lst ++ ["====="] ++ takeN 3 lst
+    
+monadBoard board =
+    -- do putStrLn $ foldr1 (\a b -> a++"\n"++b) $ 
+    --[foldr1 (++) [pipeRow x | x <- (buildList board)]]
+    do
+        (putStrLn $ head [foldr1 (\a b -> a++"\n"++b) [pipeRow x | x <- (buildList board)]])
+
+
+indexString x
+    | x == Nothing = "-"
+    | x == Just X = "X"
+    | x == Just O = "O"
+    | otherwise = "Z"
 
 
 buildList board = 
@@ -78,7 +95,9 @@ buildList board =
     --  <- [0..8]]
     --[[if getIndex (x,y) board == Nothing then "_" else "X" | x <- [0..2], y <- [0..2]]] ++ [[if getIndex (x,y) board == Nothing then "_" else "X" | x <- [3..5], y <- [0..2]]]
     -- foldr1 (\a b -> a++"\n"++b)[foldr1 (++) [if getIndex (x,y) board == Nothing then "_" else "X" | x <- [0..2], y <- [z..z+2]] | z <- [0,3,6]]
-    foldr1 (\a b -> a++"\n"++b)[foldr1 (++) [let a = getIndex (x,y) board in if a == Nothing then "_" else show a | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
+    -- foldr1 (\a b -> a++"\n"++b)[foldr1 (++) [let a = getIndex (x,y) board in if a == Nothing then "_" else show a | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
+    -- foldr1 (\a b -> a++"\n"++b)[foldr1 (++) [let a = getIndex (x,y) board in indexString a | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
+    [foldr1 (++) [let a = getIndex (x,y) board in indexString a | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
 
 getIndex::Move -> BBoard -> Maybe Player
 getIndex _ [] = Nothing
