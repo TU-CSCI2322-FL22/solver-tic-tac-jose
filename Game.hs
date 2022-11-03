@@ -23,7 +23,7 @@ winner board =
 -- | returns a board with a move made on it
 --
 -- what if the move isn't valid? -> Nothing
-makeMove :: BBoard -> Move -> Maybe BBoard
+makeMove :: BBoard -> Move -> BBoard
 makeMove board move =
     undefined
 
