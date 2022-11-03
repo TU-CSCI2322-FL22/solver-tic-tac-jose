@@ -10,6 +10,7 @@ import Board
 import Game
 import Data.ByteString (putStrLn)
 import Board (State(Going))
+import Game (showBoard)
 
             
 -- when some are filled in feel free to comment ot tests here
@@ -19,16 +20,22 @@ testBoardThree = [(0,[(0,X),(8,X),(4,X)]),(8,[(8,O)])]
 testBoardFour = [(0,[(0,X),(4,X),(8,X)]),(1,[(0,X),(4,X),(8,X)]),(2,[(0,X),(4,X),(8,X)]),(3,[(0,X),(4,X),(8,X)]),(4,[(0,X),(4,X),(8,X)]),(5,[(0,X),(4,X),(8,X)]),(6,[(0,X),(4,X),(8,X)]),(7,[(0,X),(4,X),(8,X)]),(8,[(0,X),(4,X),(8,X)])]
 testBoardFive = [(0,[(0,X),(4,X),(8,X)]),(4,[(0,X),(4,X),(8,X)]),(8,[(0,X),(4,X),(8,X)])]
 
+testBoardEmpty = []
+
 milestoneOne =
     do
-    describe "Milestone 1" $ do
-        it "empty game" $ do
-            winner [] `shouldBe` Going
-        it "game w/ one entry" $ do
-            winner [(0,[(0,X)])] `shouldBe` Going
-        it "game w/ across win" $ do
-            let board = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
-            winner board `shouldBe` Done (Win X)
+        describe "Printing gamestate" $ do
+            it "buildList on empty list" $ do
+                buildList [] `shouldBe` replicate 9 "---------"
+    -- describe "Milestone 1" $ do
+    --     it "empty game" $ do
+    --         winner [] `shouldBe` Going
+    --     it "game w/ one entry" $ do
+    --         winner [(0,[(0,X)])] `shouldBe` Going
+    --     it "game w/ across win" $ do
+    --         let board = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
+    --         winner board `shouldBe` Done (Win X)
+    
 
 runTests :: IO()
 runTests = hspec $ do

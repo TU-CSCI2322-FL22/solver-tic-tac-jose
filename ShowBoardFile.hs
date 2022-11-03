@@ -1,6 +1,6 @@
 
 
-module ShowBoard where
+module ShowBoardFile where
 
 import Board
 
@@ -21,21 +21,13 @@ pipeRow lst =
     in take 3 lst ++ marker ++ take 3 (takeN 3 lst) ++ marker ++ take 3 (takeN 6 lst)
 
 -- ^ adds the horizontal markers "==..." to the string (adds them to the list)
---
+--g
 -- used for the formatting of the output
 -- to change, change the marker
 pipeVert::[String] -> [String]
 pipeVert lst =
     let marker = replicate 17 '='
     in take 3 lst ++ [marker] ++ take 3 (takeN 3 lst) ++ [marker] ++ takeN 6 lst
-
--- ^ builds the board into a processable string for Monad IO
-makeBoard::BBoard -> String
-makeBoard board = 
-    let n = [pipeRow x | x <- (buildList board)]
-        j = pipeVert n
-        v = foldr1 (\a b -> a++"\n"++b) j
-    in v
 
 -- ^ Converts the data type to String
 indexString::Maybe Player -> String
@@ -44,11 +36,6 @@ indexString x
     | x == Just X = "X"
     | x == Just O = "O"
     | otherwise = "Z"
-
--- ^ actually goes through the structure and makes the list of strings
-buildList::BBoard -> [String]
-buildList board = 
-    [foldr1 (++) [let a = getIndex (x,y) board in indexString a | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
 
 -- ^ Get's an index. 
 --

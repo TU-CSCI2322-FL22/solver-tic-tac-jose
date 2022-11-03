@@ -11,7 +11,7 @@ Every function in here should have test cases.
 module Game where
 
 import Board
-import ShowBoard
+import ShowBoardFile
 
 -- | determines who has won a board
 --
@@ -37,4 +37,15 @@ legalMoves board =
 showBoard :: BBoard -> IO ()
 showBoard board =
     do
-        putStrLn $ makeBoard board
+        let n = [pipeRow x | x <- (buildList board)]
+            j = pipeVert n
+            v = foldr1 (\a b -> a++"\n"++b) j
+        putStrLn $ v
+    where -- ^ builds the board into a processable string for Monad IO
+
+-- ^ actually goes through the structure and makes the list of strings
+buildList::BBoard -> [String]
+buildList board = 
+    [foldr1 (++) [let a = getIndex (x,y) board in indexString a | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
+
+
