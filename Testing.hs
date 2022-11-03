@@ -22,20 +22,27 @@ testBoardFive = [(0,[(0,X),(4,X),(8,X)]),(4,[(0,X),(4,X),(8,X)]),(8,[(0,X),(4,X)
 
 testBoardEmpty = []
 
+--WINNER OF GAME TESTING 
+testBoardX = [(y,[(x,X) | x <- [0..8]]) | y <- [0..8]]
+testBoardO = [(y,[(x,O) | x <- [0..8]]) | y <- [0..8]]
+
+testBoardTLX = [(0,[(0,X),(4,X),(8,X)])]
+
+
 milestoneOne =
     do
-        describe "Printing gamestate" $ do
+        describe "Printing gamestate" $ do -- SHOW FUNCTION TESTING
             it "buildList on empty list" $ do
                 buildList [] `shouldBe` replicate 9 "---------"
-    -- describe "Milestone 1" $ do
-    --     it "empty game" $ do
-    --         winner [] `shouldBe` Going
-    --     it "game w/ one entry" $ do
-    --         winner [(0,[(0,X)])] `shouldBe` Going
-    --     it "game w/ across win" $ do
-    --         let board = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
-    --         winner board `shouldBe` Done (Win X)
-    
+        describe "Winner of game" $ do -- WINNER TESTING
+            it "empty board" $ do
+                winner [] `shouldBe` Going
+            it "Full game of X's" $ do
+                winner testBoardX `shouldBe` Done (Win X)
+            it "Full game of X's" $ do
+                winner testBoardO `shouldBe` Done (Win O)
+            it "Top left X win" $ do
+                winner testBoardTLX `shouldBe` Going
 
 runTests :: IO()
 runTests = hspec $ do
