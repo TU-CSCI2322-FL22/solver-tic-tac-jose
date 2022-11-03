@@ -11,7 +11,7 @@ Every function in here should have test cases.
 module Game where
 
 import Board
-
+import ShowBoard
 
 -- | determines who has won a board
 --
@@ -23,16 +23,29 @@ winner board =
 -- | returns a board with a move made on it
 --
 -- what if the move isn't valid? -> Nothing
-makeMove :: BBoard -> Move -> Maybe BBoard
+makeMove :: BBoard -> Move -> BBoard
 makeMove board move =
     undefined
 
 -- | returns the legal moves for a board
-legalMoves :: BBoard -> [Move]
+legalMoves :: BBoard -> Turn -> [Move]
 legalMoves board =
     undefined
 
+
 -- | prints the board
-showBoard :: BBoard -> [String]
+showBoard :: BBoard -> IO ()
 showBoard board =
-    undefined
+    do
+        let n = [pipeRow x | x <- (buildList board)]
+            j = pipeVert n
+            v = foldr1 (\a b -> a++"\n"++b) j
+        putStrLn $ v
+    where -- ^ builds the board into a processable string for Monad IO
+
+-- ^ actually goes through the structure and makes the list of strings
+buildList::BBoard -> [String]
+buildList board = 
+    [foldr1 (++) [let a = getIndex (x,y) board in indexString a | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
+
+
