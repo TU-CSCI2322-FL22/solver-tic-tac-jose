@@ -22,7 +22,8 @@ milestoneOne =
         it "game w/ one entry" $ do
             winner [(0,[(0,X)])] `shouldBe` Going
         it "game w/ across win" $ do
-            board <- [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
+            let board = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
+            winner board `shouldBe` Done (Win X)
 
 runTests :: IO()
 runTests = hspec $ do
