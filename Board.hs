@@ -20,7 +20,7 @@ type Move = (Integer,Integer)
 --
 --  6,7,8]
 
--- Symbol, then the 
+-- Symbol, then the smallboard position that they played on.
 type Turn = (Player, Integer)
 
 type LBoard = [(Integer,Player)]
@@ -42,7 +42,3 @@ data State = Done Outcome | Going deriving (Show, Eq)
 -- board :: BBoard
 -- -- board = [[((0,0),X)],[((1,1),X)],[((2,2),X)],[((1,1),X)],[(1,1),X],[],[],[]]
 -- board = [[((x,x),X)] | x <- [0..8]]
-
--- a = do
---     mapM (print) [1,2,3]
---     mapM_ (print) [1,2,3]
