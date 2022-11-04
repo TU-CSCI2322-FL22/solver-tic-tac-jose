@@ -26,12 +26,6 @@ winner board
         c = composite board
         x = winnerBool X c
         o = winnerBool O c
-    -- | xData = Done 
-    
-    
-    -- where xData = winnerBool X board
-    --     oData = winnerBool O board
-    
 
 -- | returns a board with a move made on it
 --
