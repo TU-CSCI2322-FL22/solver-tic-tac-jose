@@ -38,6 +38,11 @@ makeMove board move =
 --if it isn't in the 0..8
 --that it's in legal
 
+madeMove :: BBoard -> Move -> Turn -> Player -> Maybe BBoard
+madeMove board move turn player
+    | filterMove board move turn = Just $ makeMove board move player
+    | otherwise = Nothing
+
 filterMove:: BBoard -> Move -> Turn -> Bool
 filterMove board (b,s) turn
     | b < 0 || s < 0 = False
