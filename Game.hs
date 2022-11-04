@@ -12,20 +12,40 @@ module Game where
 
 import Board
 import ShowBoard
-import Winner
 
 -- | determines who has won a board
 --
 -- need to make a case for where the board is full and it returns Nothing
 winner :: BBoard -> State
-winner board
-    | x = Done (Win X)
-    | o = Done (Win O)
-    | otherwise = Going
+winner board 
+    | c == Just X = Done (Win X)
+    | c == Just O = Done (Win O)
+    | c == Nothing = Going
+    | otherwise = error "this was not supposed to happen"
     where
-        c = composite board
-        x = winnerBool X c
-        o = winnerBool O c
+        c = findAll $ map (\(a,b) -> (a, mapB b)) $ filter (\(a,b) -> b /= Nothing) $ map (\(a,b) -> (a, findAll b)) board
+        mapB :: Maybe Player -> Player
+        mapB player
+            | player == Just X = X
+            | player == Just O = O
+            | otherwise = error "this is supposed to be filtered out"
+
+        findAll :: LBoard -> Maybe Player
+        findAll board
+            | x && o = error "multiple wins? this should not be able to happen"
+            | x = Just X
+            | o = Just O
+            | otherwise = Nothing
+            where
+                getLoc :: Player -> LBoard -> [Integer]
+                getLoc player board =
+                    map (\(a,b) -> a) $ filter (\(a,b) -> b == player) board
+                locX = getLoc X board
+                locO = getLoc O board
+                correct = [[z,z+1,z+2] | z <- [0,3,6]] ++ [[z,z+3,z+6] | z <- [0,1,2]] ++ [[0,4,8],[2,4,6]]
+                x = any ((==True) . (\a -> all (==True) [v `elem` locX | v <- a])) correct
+                o = any ((==True) . (\a -> all (==True) [v `elem` locO | v <- a])) correct
+
 
 -- | returns a board with a move made on it
 --
