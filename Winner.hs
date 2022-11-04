@@ -7,19 +7,10 @@ import Board
 -- get list of locations for a player
 -- check if for every x in wins, if x is in the location data
 
--- getLoc :: BBoard -> LBoard
--- getLoc O  [(0,X),(3,X),(4,O)]
-
-correctV2 = [[z,z+1,z+2] | z <- [0,3,6]] ++ [[z,z+3,z+6] | z <- [0,1,2]] ++ [[0,4,8],[2,4,6]]
-
-testBoardX = [(y,[(x,X) | x <- [0..8]]) | y <- [0..8]]
-testBoardThree = [(0,[(0,X),(4,X),(8,X)]),(8,[(8,O)])]
-
-
 
 composition :: BBoard -> Maybe Player
 composition board =
-    findAll $ map (\(a,b) -> (a, mapB b)) $ filter (\(a,b) -> if b == Nothing then False else True) $ map (\(a,b) -> (a, findAll b)) board
+    findAll $ map (\(a,b) -> (a, mapB b)) $ filter (\(a,b) -> b /= Nothing) $ map (\(a,b) -> (a, findAll b)) board
     where
         mapB :: Maybe Player -> Player
         mapB player
@@ -33,13 +24,13 @@ composition board =
             | x = Just X
             | o = Just O
             | otherwise = Nothing
-            where 
+            where
                 getLoc :: Player -> LBoard -> [Integer]
                 getLoc player board =
                     map (\(a,b) -> a) $ filter (\(a,b) -> b == player) board
                 locX = getLoc X board
                 locO = getLoc O board
                 correct = [[z,z+1,z+2] | z <- [0,3,6]] ++ [[z,z+3,z+6] | z <- [0,1,2]] ++ [[0,4,8],[2,4,6]]
-                x = any (==True) $ map (\a -> all (==True) [v `elem` locX | v <- a]) correct
-                o = any (==True) $ map (\a -> all (==True) [v `elem` locO | v <- a]) correct
+                x = any ((==True) . (\a -> all (==True) [v `elem` locX | v <- a])) correct
+                o = any ((==True) . (\a -> all (==True) [v `elem` locO | v <- a])) correct
 
