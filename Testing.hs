@@ -27,6 +27,15 @@ milestoneOne =
         describe "Printing gamestate" $ do
             it "buildList on empty list" $ do
                 buildList [] `shouldBe` replicate 9 "---------"
+        describe "Make move" $ do
+            it "empty X top left" $ do
+                madeMove [] (0,0) (O,0) X `shouldBe` Just [(0,[(0,X)])]
+            it "empty O bottom right" $ do
+                madeMove [] (8,8) (X,8) O `shouldBe` Just [(8,[(8,O)])]
+            it "full board" $ do
+                madeMove testBoardX (4,4) (O,4) X `shouldBe` Nothing
+            it "incorrect space" $ do
+                madeMove [] (8,8) (O,0) X `shouldBe` Nothing
     -- describe "Milestone 1" $ do
     --     it "empty game" $ do
     --         winner [] `shouldBe` Going

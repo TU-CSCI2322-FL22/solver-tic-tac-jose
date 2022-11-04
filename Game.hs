@@ -33,8 +33,25 @@ replaceNth n newVal (x:xs)
 -- Code above replaces an elem in a list
 -- What we want to do is add a movement to a lil board
 
-makeMove :: BBoard -> Move -> BBoard
-makeMove board move = undefined
+
+
+makeMove :: BBoard -> Move -> Player -> BBoard
+makeMove [] (a,b) player = [( a, [( b, player)])]
+makeMove board (a,b) player
+    | not $ a `elem` (map fst board) = makeMove [] (a,b) player ++ board
+    | otherwise = d:x
+    where x = filter (\c -> a /= fst c) board
+          (y,z) = head $ filter (\c -> a == fst c) board
+          d = (y,z ++ [(b, player)])
+
+
+
+-- makeMove board move player = 
+    -- if fst move `elem` map fst board
+    -- then undefined
+    -- else board ++ [(fst move, [(snd move, player)])]
+        
+
     
     -- let a = legalMoves Bboard Turn
     -- in if move `elem` a then makeMove x x else error "Not a valid move."
