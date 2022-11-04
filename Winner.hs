@@ -18,6 +18,7 @@ composite board =
         oData = [(x, O) | (x,passBoard) <- board, winnerBool O passBoard]
     in xData ++ oData
 
+-- ^ checks all 8 possibilities of wins in a smallboard
 winnerBool :: Player -> LBoard -> Bool
 winnerBool symbol board =
     diagonalLeft symbol board
@@ -25,6 +26,7 @@ winnerBool symbol board =
     || horizontal symbol board
     || vertical symbol board
 
+-- ^ checks diagonal 
 diagonalLeft::Player -> LBoard -> Bool
 diagonalLeft symbol board =
     (0,symbol) `elem` board
