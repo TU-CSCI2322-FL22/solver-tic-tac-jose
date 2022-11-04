@@ -18,14 +18,13 @@ import Winner
 --
 -- need to make a case for where the board is full and it returns Nothing
 winner :: BBoard -> State
-winner board
-    | x = Done (Win X)
-    | o = Done (Win O)
-    | otherwise = Going
+winner board 
+    | c == Just X = Done (Win X)
+    | c == Just O = Done (Win O)
+    | c == Nothing = Going
+    | otherwise = error "this was not supposed to happen"
     where
-        c = composite board
-        x = winnerBool X c
-        o = winnerBool O c
+        c = composition board
 
 -- | returns a board with a move made on it
 --
