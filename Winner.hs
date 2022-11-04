@@ -3,14 +3,6 @@ module Winner where
 
 import Board
 
-diagonal :: LBoard
-diagonal = [(0,X),(4,X),(8,X)]
-horiz = [(0,X),(1,X),(2,X)]
-vert = [(0,X),(3,X),(6,X)]
-
-testBoardThree = [(0,[(0,X),(4,X),(8,X)]),(8,[(8,O)])]
-testBoardFour = [(0,[(0,X),(4,X),(8,X)]),(8,[(0,O),(4,O),(8,O)])]
-testBoardFive = [(0,[(0,X),(4,X),(8,X)]),(4,[(0,X),(4,X),(8,X)]),(8,[(0,X),(4,X),(8,X)])]
 
 composite :: BBoard -> LBoard
 composite board =
