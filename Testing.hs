@@ -38,6 +38,7 @@ milestoneOne =
         describe "Printing gamestate" $ do -- SHOW FUNCTION TESTING
             it "buildList on empty list" $ do
                 buildList [] `shouldBe` replicate 9 "---------"
+
             it "all are X's" $ do
                 buildList testBoardX `shouldBe` replicate 9 (replicate 9 'X')
             it "all are O's" $ do
@@ -62,6 +63,7 @@ milestoneOne =
         describe "Legal moves" $ do
             it "Full board of X's" $ do
                 legalMoves testBoardX (X,0)  `shouldBe` []
+                
         describe "Make move" $ do
             it "empty X top left" $ do
                 madeMove [] (0,0) (O,0) X `shouldBe` Just [(0,[(0,X)])]
@@ -71,7 +73,6 @@ milestoneOne =
                 madeMove testBoardX (4,4) (O,4) X `shouldBe` Nothing
             it "incorrect space" $ do
                 madeMove [] (8,8) (O,0) X `shouldBe` Nothing
-
 
 runTests :: IO()
 runTests = hspec $ do

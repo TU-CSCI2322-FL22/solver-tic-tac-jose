@@ -50,9 +50,22 @@ winner board
 -- | returns a board with a move made on it
 --
 -- what if the move isn't valid? -> Nothing
+
 makeMove :: BBoard -> Move -> Player -> BBoard
-makeMove board move =
-    undefined
+makeMove [] (a,b) player = [( a, [( b, player)])]
+makeMove board (a,b) player
+    | not $ a `elem` (map fst board) = makeMove [] (a,b) player ++ board
+    | otherwise = d:x
+    where x = filter (\c -> a /= fst c) board
+          (y,z) = head $ filter (\c -> a == fst c) board
+          d = (y,z ++ [(b, player)])
+
+
+
+-- makeMove board move player = 
+    -- let a = legalMoves Bboard Turn
+    -- in if move `elem` a then makeMove x x else error "Not a valid move."
+        
 
 --filtering
 --if it isn't in the 0..8
