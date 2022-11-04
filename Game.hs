@@ -23,9 +23,22 @@ winner board =
 -- | returns a board with a move made on it
 --
 -- what if the move isn't valid? -> Nothing
+
+replaceNth :: Int -> a -> [a] -> [a]
+replaceNth _ _ [] = []
+replaceNth n newVal (x:xs)
+    | n == 0 = newVal:xs
+    | otherwise = x:replaceNth (n-1) newVal xs
+
+-- Code above replaces an elem in a list
+-- What we want to do is add a movement to a lil board
+
 makeMove :: BBoard -> Move -> BBoard
-makeMove board move =
-    undefined
+makeMove board move = undefined
+    
+    -- let a = legalMoves Bboard Turn
+    -- in if move `elem` a then makeMove x x else error "Not a valid move."
+        
 
 -- | returns the legal moves for a board
 legalMoves :: BBoard -> Turn -> [Move]
