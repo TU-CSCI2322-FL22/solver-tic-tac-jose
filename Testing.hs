@@ -37,18 +37,17 @@ milestoneOne =
     do
         describe "Printing gamestate" $ do -- SHOW FUNCTION TESTING
             it "buildList on empty list" $ do
-                buildList [] `shouldBe` replicate 9 "---------"
-
+                showBoard [] `shouldBe` replicate 9 "---------"
             it "all are X's" $ do
-                buildList testBoardX `shouldBe` replicate 9 (replicate 9 'X')
+                showBoard testBoardX `shouldBe` replicate 9 (replicate 9 'X')
             it "all are O's" $ do
-                buildList testBoardO `shouldBe` replicate 9 (replicate 9 'O')
+                showBoard testBoardO `shouldBe` replicate 9 (replicate 9 'O')
             it "top left is X" $ do
-                buildList [(0,[(0,X)])] `shouldBe` "X--------" : replicate 8 "---------"
+                showBoard [(0,[(0,X)])] `shouldBe` "X--------" : replicate 8 "---------"
             it "top left is O" $ do
-                buildList [(0,[(0,O)])] `shouldBe` "O--------" : replicate 8 "---------"
+                showBoard [(0,[(0,O)])] `shouldBe` "O--------" : replicate 8 "---------"
             it "middle is X" $ do
-                buildList [(4,[(4,X)])] `shouldBe` replicate 4 "---------" ++ ("----X----" : replicate 4 "---------" )
+                showBoard [(4,[(4,X)])] `shouldBe` replicate 4 "---------" ++ ("----X----" : replicate 4 "---------" )
         describe "Winner of game" $ do -- WINNER TESTING
             it "empty board" $ do
                 winner [] `shouldBe` Going

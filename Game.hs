@@ -11,41 +11,38 @@ Every function in here should have test cases.
 module Game where
 
 import Board
-import ShowBoard
+import Data.Maybe
 
 -- | determines who has won a board
 --
 -- need to make a case for where the board is full and it returns Nothing
+
+--case expression instead of guards
+--
 winner :: BBoard -> State
-winner board 
-    | c == Just X = Done (Win X)
-    | c == Just O = Done (Win O)
-    | c == Nothing = Going
-    | otherwise = error "this was not supposed to happen"
+winner board =
+    case littleWinner boardWinners of
+        Just pl -> Done $ Win pl
+        Nothing -> Going
     where
-        c = findAll $ map (\(a,b) -> (a, mapB b)) $ filter (\(a,b) -> b /= Nothing) $ map (\(a,b) -> (a, findAll b)) board
-        mapB :: Maybe Player -> Player
-        mapB player
-            | player == Just X = X
-            | player == Just O = O
-            | otherwise = error "this is supposed to be filtered out"
+        boardWinners = mapMaybe winnerOf board
+        winnerOf :: (Integer, LBoard) -> Maybe (Integer, Player)
+        winnerOf (ind, lb) = fmap (\w -> (ind,w)) (littleWinner lb)
+        checkWinner :: Player -> LBoard -> Bool
+        checkWinner player board =  let locs = getLocs player board in any (all (`elem` locs)) winningCombinations
+        littleWinner :: LBoard -> Maybe Player
+        littleWinner board =
+            case (checkWinner X board, checkWinner O board) of
+                (True, True) ->  error "multiple wins? this should not be able to happen"
+                (True, False) -> Just X
+                (False, True) -> Just O
+                _ -> Nothing
 
-        findAll :: LBoard -> Maybe Player
-        findAll board
-            | x && o = error "multiple wins? this should not be able to happen"
-            | x = Just X
-            | o = Just O
-            | otherwise = Nothing
-            where
-                getLoc :: Player -> LBoard -> [Integer]
-                getLoc player board =
-                    map (\(a,b) -> a) $ filter (\(a,b) -> b == player) board
-                locX = getLoc X board
-                locO = getLoc O board
-                correct = [[z,z+1,z+2] | z <- [0,3,6]] ++ [[z,z+3,z+6] | z <- [0,1,2]] ++ [[0,4,8],[2,4,6]]
-                x = any ((==True) . (\a -> all (==True) [v `elem` locX | v <- a])) correct
-                o = any ((==True) . (\a -> all (==True) [v `elem` locO | v <- a])) correct
+winningCombinations :: [[Integer]]
+winningCombinations = [[z,z+1,z+2] | z <- [0,3,6]] ++ [[z,z+3,z+6] | z <- [0,1,2]] ++ [[0,4,8],[2,4,6]]
 
+getLocs :: Player -> LBoard -> [Integer]
+getLocs player board = map fst $ filter (\(a,b) -> b == player) board
 
 -- | returns a board with a move made on it
 --
@@ -93,18 +90,66 @@ legalMoves board turn = map lMoveHelper (snd board) ([0..8]\\[fst a | a <- (boar
 
 
 -- | prints the board
-showBoard :: BBoard -> IO ()
-showBoard board =
+ioBoard :: BBoard -> IO ()
+ioBoard board =
     do
-        let n = [pipeRow x | x <- (buildList board)]
-            j = pipeVert n
-            v = foldr1 (\a b -> a++"\n"++b) j
-        putStrLn v
-    where -- ^ builds the board into a processable string for Monad IO
+        let j = foldr1 (\a b -> a++"\n"++b) $ pipeVert [pipeRow x | x <- (showBoard board)]
+        putStrLn j
+    where
+        -- ^ drops the first N elements from a list
+        takeN::Integer -> [a] -> [a]
+        takeN n [] = []
+        takeN 0 lst = lst
+        takeN n (x:xs) =
+            takeN (n-1) xs
+        -- ^ adds the vertical markers "||" to the string (adds them to the row)
+        --
+        -- used for the formatting of the output
+        -- to change, change the marker
+        pipeRow::String -> String
+        pipeRow lst =
+            let marker = " | "
+            in take 3 lst ++ marker ++ take 3 (takeN 3 lst) ++ marker ++ take 3 (takeN 6 lst)
+
+        -- ^ adds the horizontal markers "==..." to the string (adds them to the list)
+        --
+        -- used for the formatting of the output
+        -- to change, change the marker
+        pipeVert::[String] -> [String]
+        pipeVert lst =
+            let marker = replicate 15 '='
+            in take 3 lst ++ [marker] ++ take 3 (takeN 3 lst) ++ [marker] ++ takeN 6 lst
+
+-- needs to use case statements
 
 -- ^ actually goes through the structure and makes the list of strings
-buildList::BBoard -> [String]
-buildList board = 
+showBoard::BBoard -> [String]
+showBoard board =
     [foldr1 (++) [let a = getIndex (x,y) board in indexString a | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
+    where
+        -- ^ Converts the data type to String
+        indexString::Maybe Player -> String
+        indexString x
+            | x == Nothing = "-"
+            | x == Just X = "X"
+            | x == Just O = "O"
+            | otherwise = "Z"
 
+        -- ^ Get's an index. 
+        --
+        -- Might be schlemiely
+        getIndex::Move -> BBoard -> Maybe Player
+        getIndex _ [] = Nothing
+        getIndex (x,y) ((a,b):xs)
+            | a == x = getSub y b
+            | otherwise = getIndex (x,y) xs
+            where
+                -- ^ Gets the sub board
+                --
+                -- Helper for getIndex
+                getSub::Integer -> LBoard -> Maybe Player
+                getSub _ [] = Nothing
+                getSub y ((a,b):xs)
+                    | y == a = Just b
+                    | otherwise = getSub y xs
 
