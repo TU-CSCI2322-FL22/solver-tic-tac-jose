@@ -32,6 +32,10 @@ testBoardO = [(y,[(x,O) | x <- [0..8]]) | y <- [0..8]]
 --
 testBoardTLX = [(0,[(0,X),(4,X),(8,X)])]
 
+miniTie = [(0,X),(1,O),(2,O),(3,O),(4,X),(5,X),(6,X),(7,O),(8,O)]
+bigTie = [(z,miniTie) | z <- [0..8]]
+singleXTie = [(z,miniTie) | z <- [0..7]] ++ [(8,[(0,X),(4,X),(8,X)])]
+singleBotRight = [(z,[(0,X)]) | z <- [0..8]]
 
 milestoneOne =
     do
