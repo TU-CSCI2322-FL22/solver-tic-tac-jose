@@ -86,7 +86,9 @@ filterMove board (b,s) turn
 
 -- | returns the legal moves for a board
 legalMoves :: BBoard -> Turn -> [Move]
-legalMoves board = undefined
+lMoveHelper a b = (a,b)
+legalMoves :: BBoard -> Turn -> [Move]
+legalMoves board turn = map lMoveHelper (snd board) ([0..8]\\[fst a | a <- (board !! (snd turn))])
 --Q is working on this
 
 
