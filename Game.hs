@@ -89,12 +89,33 @@ filterMove board (b,s) turn
     | (b,s) `elem` options = True
     | otherwise = False
     where options = legalMoves board turn
+checkWinner :: Player -> LBoard -> Bool
+checkWinner player board =  let locs = getLocs player board in any (all (`elem` locs)) winningCombinations
 
 -- | returns the legal moves for a board
+littleWinner :: LBoard -> Maybe Player
+littleWinner board =
+            case (checkWinner X board, checkWinner O board) of
+                (True, True) ->  error "multiple wins? this should not be able to happen"
+                (True, False) -> Just X
+                (False, True) -> Just O
+                _ -> Nothing
+
+validLBoard board = [0..8]\\[fst x |x <- board, littleWinner (snd x) /= Nothing]
+-- lboard without winner
+
+makeTurn player int = (player,int)
+listTurn turn board = map (makeTurn (fst turn)) (validLBoard board)
+
 lMoveHelper a b = (a,b)
 legalMoves :: BBoard -> Turn -> [Move]
-legalMoves board turn = if not ((snd turn) `elem` [fst a | a<-board]) then map (lMoveHelper (snd turn)) [0..8] 
-                        else  map (lMoveHelper (snd turn)) ([0..8]\\[fst b | b<-snd (head [ a | a <- board, fst a == snd turn])])
+legalMoves board turn
+                        | not ((snd turn) `elem` (validLBoard board)) = concat (map (legalMoves board) (listTurn turn board))
+                        | not ((snd turn) `elem` [fst a | a<-board]) = map (lMoveHelper (snd turn)) [0..8] 
+                        | otherwise = map (lMoveHelper (snd turn)) ([0..8]\\[fst b | b<-snd (head [ a | a <- board, fst a == snd turn])])
+
+
+ 
 
 --Q is working on this
 
