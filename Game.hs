@@ -105,6 +105,7 @@ ioBoard board =
             let marker = replicate 15 '='
             in take 3 lst ++ [marker] ++ take 3 (takeN 3 lst) ++ [marker] ++ takeN 6 lst
 
+-- needs to use case statements
 
 -- ^ actually goes through the structure and makes the list of strings
 showBoard::BBoard -> [String]
