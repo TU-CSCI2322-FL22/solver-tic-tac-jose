@@ -115,8 +115,6 @@ legalMoves board turn
                         | otherwise = map (lMoveHelper (snd turn)) ([0..8]\\[fst b | b<-snd (head [ a | a <- board, fst a == snd turn])])
 
 
- 
-
 --Q is working on this
 
 
