@@ -9,7 +9,7 @@ import Control.Exception (evaluate)
 import Board
 import Game
 import Data.ByteString (putStrLn)
-import Board (State(Going), Player (X))
+import Board (State(Going), Player (X), Outcome (Tie))
 import Game (showBoard, legalMoves, makeMove)
 import GHC.Base (undefined)
 import Data.List (replicate)
@@ -32,6 +32,10 @@ testBoardO = [(y,[(x,O) | x <- [0..8]]) | y <- [0..8]]
 --
 testBoardTLX = [(0,[(0,X),(4,X),(8,X)])]
 
+miniTie = [(0,X),(1,O),(2,O),(3,O),(4,X),(5,X),(6,X),(7,O),(8,O)]
+bigTie = [(z,miniTie) | z <- [0..8]]
+singleXTie = [(z,miniTie) | z <- [0..7]] ++ [(8,[(0,X),(4,X),(8,X)])]
+singleBotRight = [(z,[(0,X)]) | z <- [0..8]]
 
 milestoneOne =
     do
@@ -59,6 +63,14 @@ milestoneOne =
                 winner testBoardTLX `shouldBe` Going
             it "Diagonal Left Right" $ do
                 winner [(0,[(0,X),(4,X),(8,X)]),(4,[(0,X),(4,X),(8,X)]),(8,[(0,X),(4,X),(8,X)])] `shouldBe` Done (Win X)
+            it "Going one X every spot" $ do
+                winner [(z,[(0,X)]) | z <- [0..8]] `shouldBe` Going
+            it "Tie every board tie" $ do
+                winner [(z,miniTie) | z <- [0..8]] `shouldBe` Done Tie
+            it "Tie every tie except one" $ do
+                winner ([(z,miniTie) | z <- [0..7]] ++ [(8,[(0,X),(4,X),(8,X)])]) `shouldBe` Done Tie
+            it "Going every tie except one empty" $ do
+                winner ([(z,miniTie) | z <- [0..7]]) `shouldBe` Going
         describe "Legal moves" $ do
             it "Full board of X's" $ do
                 legalMoves testBoardX (X,0)  `shouldBe` []

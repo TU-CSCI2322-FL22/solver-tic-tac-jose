@@ -12,6 +12,7 @@ module Game where
 
 import Board
 import Data.Maybe
+import Data.List
 
 -- | determines who has won a board
 --
@@ -23,13 +24,24 @@ winner :: BBoard -> State
 winner board =
     case littleWinner boardWinners of
         Just pl -> Done $ Win pl
-        Nothing -> Going
+        Nothing -> if tieCase board then Done Tie else Going
+        -- if all are filled, then check
+        -- go and find the Nothings
+        -- check if all Nothings are 
     where
-        boardWinners = mapMaybe winnerOf board
+        boardWinners = mapMaybe winnerOf board -- maps the win to all the littleOnes -- returns a list of what the board think
         winnerOf :: (Integer, LBoard) -> Maybe (Integer, Player)
         winnerOf (ind, lb) = fmap (\w -> (ind,w)) (littleWinner lb)
         checkWinner :: Player -> LBoard -> Bool
         checkWinner player board =  let locs = getLocs player board in any (all (`elem` locs)) winningCombinations
+
+        tieCase :: BBoard -> Bool
+        tieCase board
+            | length board /= 9 = False
+            | otherwise = not $ null [x | x <- winners, length x == 9]
+            where 
+                winners = [b | (_,b) <- board, littleWinner b == Nothing]
+
         littleWinner :: LBoard -> Maybe Player
         littleWinner board =
             case (checkWinner X board, checkWinner O board) of
@@ -43,6 +55,9 @@ winningCombinations = [[z,z+1,z+2] | z <- [0,3,6]] ++ [[z,z+3,z+6] | z <- [0,1,2
 
 getLocs :: Player -> LBoard -> [Integer]
 getLocs player board = map fst $ filter (\(a,b) -> b == player) board
+
+
+
 
 -- | returns a board with a move made on it
 --
