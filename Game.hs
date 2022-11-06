@@ -91,10 +91,9 @@ filterMove board (b,s) turn
     where options = legalMoves board turn
 
 -- | returns the legal moves for a board
-legalMoves :: BBoard -> Turn -> [Move]
 lMoveHelper a b = (a,b)
-legalMoves board turn =
-    undefined
+legalMoves :: BBoard -> Turn -> [Move]
+legalMoves board turn = map (lMoveHelper (snd turn)) ([0..8]\\[fst a | a <- snd (board !! (fromIntegral (snd turn)))])
     -- map lMoveHelper (snd board) ([0..8]\\[fst a | a <- (board !! (snd turn))])
 --Q is working on this
 
