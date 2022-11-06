@@ -58,12 +58,6 @@ perfectMove board (a,b) player
           d = (y,z ++ [(b, player)])
 
 
-
--- makeMove board move player = 
-    -- let a = legalMoves Bboard Turn
-    -- in if move `elem` a then makeMove x x else error "Not a valid move."
-        
-
 --filtering
 --if it isn't in the 0..8
 --that it's in legal
@@ -84,7 +78,8 @@ filterMove board (b,s) turn
 -- | returns the legal moves for a board
 legalMoves :: BBoard -> Turn -> [Move]
 lMoveHelper a b = (a,b)
-legalMoves board turn = undefined
+legalMoves board turn =
+    undefined
     -- map lMoveHelper (snd board) ([0..8]\\[fst a | a <- (board !! (snd turn))])
 --Q is working on this
 
@@ -125,15 +120,15 @@ ioBoard board =
 -- ^ actually goes through the structure and makes the list of strings
 showBoard::BBoard -> [String]
 showBoard board =
-    [foldr1 (++) [let a = getIndex (x,y) board in indexString a | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
+    [foldr1 (++) [indexString $ getIndex (x,y) board  | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
     where
         -- ^ Converts the data type to String
         indexString::Maybe Player -> String
-        indexString x
-            | x == Nothing = "-"
-            | x == Just X = "X"
-            | x == Just O = "O"
-            | otherwise = "Z"
+        indexString x = 
+            case x of
+                Nothing -> "-"
+                Just X -> "X"
+                Just O -> "O"
 
         -- ^ Get's an index. 
         --
