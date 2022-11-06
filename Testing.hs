@@ -79,7 +79,7 @@ milestoneOne =
             it "Empty board top left" $ do
                 legalMoves [] (X, 0) `shouldBe` [(0,y) | y <- [0..8]]
             it "Top left full" $ do
-                legalMoves [(0,[(z,X) | z <- [0..8]])] (X,0) `shouldBe` [(x,y) | x <- [1..8], y <- [0..8]]    
+                legalMoves [(0,[(z,X) | z <- [0..8]])] (X,0) `shouldBe` [(x,y) | x <- [1..8], y <- [0..8]]
                 
         describe "Make move" $ do
             it "empty X top left" $ do

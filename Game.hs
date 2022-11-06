@@ -32,8 +32,6 @@ winner board =
         boardWinners = mapMaybe winnerOf board -- maps the win to all the littleOnes -- returns a list of what the board think
         winnerOf :: (Integer, LBoard) -> Maybe (Integer, Player)
         winnerOf (ind, lb) = fmap (\w -> (ind,w)) (littleWinner lb)
-        checkWinner :: Player -> LBoard -> Bool
-        checkWinner player board =  let locs = getLocs player board in any (all (`elem` locs)) winningCombinations
 
         tieCase :: BBoard -> Bool
         tieCase board
@@ -42,21 +40,12 @@ winner board =
             where 
                 winners = [b | (_,b) <- board, littleWinner b == Nothing]
 
-        littleWinner :: LBoard -> Maybe Player
-        littleWinner board =
-            case (checkWinner X board, checkWinner O board) of
-                (True, True) ->  error "multiple wins? this should not be able to happen"
-                (True, False) -> Just X
-                (False, True) -> Just O
-                _ -> Nothing
 
 winningCombinations :: [[Integer]]
 winningCombinations = [[z,z+1,z+2] | z <- [0,3,6]] ++ [[z,z+3,z+6] | z <- [0,1,2]] ++ [[0,4,8],[2,4,6]]
 
 getLocs :: Player -> LBoard -> [Integer]
 getLocs player board = map fst $ filter (\(a,b) -> b == player) board
-
-
 
 
 -- | returns a board with a move made on it
@@ -103,18 +92,18 @@ littleWinner board =
 validLBoard board = [0..8]\\[fst x |x <- board, littleWinner (snd x) /= Nothing]
 -- lboard without winner
 
+makeTurn :: Player -> Integer -> (Player,Integer)
 makeTurn player int = (player,int)
+
+listTurn :: Turn -> BBoard -> [(Player, Integer)]
 listTurn turn board = map (makeTurn (fst turn)) (validLBoard board)
 
 lMoveHelper a b = (a,b)
 legalMoves :: BBoard -> Turn -> [Move]
 legalMoves board turn
-                        | not ((snd turn) `elem` (validLBoard board)) = concat (map (legalMoves board) (listTurn turn board))
-                        | not ((snd turn) `elem` [fst a | a<-board]) = map (lMoveHelper (snd turn)) [0..8] 
-                        | otherwise = map (lMoveHelper (snd turn)) ([0..8]\\[fst b | b<-snd (head [ a | a <- board, fst a == snd turn])])
-
-
---Q is working on this
+            | not ((snd turn) `elem` (validLBoard board)) = concat (map (legalMoves board) (listTurn turn board))
+            | not ((snd turn) `elem` [fst a | a<-board]) = map (lMoveHelper (snd turn)) [0..8] 
+            | otherwise = map (lMoveHelper (snd turn)) ([0..8]\\[fst b | b<-snd (head [ a | a <- board, fst a == snd turn])])
 
 
 -- | prints the board
