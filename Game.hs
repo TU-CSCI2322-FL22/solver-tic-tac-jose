@@ -35,9 +35,7 @@ winner board =
         checkWinner :: Player -> LBoard -> Bool
         checkWinner player board =  let locs = getLocs player board in any (all (`elem` locs)) winningCombinations
 
-        decideTie board = 
-            length board == 9
-
+        tieCase :: BBoard -> Bool
         tieCase board
             | length board /= 9 = False
             | otherwise = not $ null [x | x <- winners, length x == 9]
