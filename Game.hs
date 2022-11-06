@@ -90,6 +90,8 @@ makeMove board (b,s) turn player =
         j = (b,s) `elem` options -- we want to be true
         
 -- | returns the legal moves for a board
+checkWinner :: Player -> LBoard -> Bool
+checkWinner player board =  let locs = getLocs player board in any (all (`elem` locs)) winningCombinations
 littleWinner :: LBoard -> Maybe Player
 littleWinner board =
             case (checkWinner X board, checkWinner O board) of
