@@ -78,18 +78,17 @@ perfectMove board (a,b) player
 --that it's in legal
 
 makeMove :: BBoard -> Move -> Turn -> Player -> Maybe BBoard
-makeMove board move turn player
-    | filterMove board move turn = Just $ perfectMove board move player
-    | otherwise = Nothing
-
-filterMove:: BBoard -> Move -> Turn -> Bool
-filterMove board (b,s) turn
-    | b < 0 || s < 0 = False
-    | b > 8 || s > 8 = False
-    | (b,s) `elem` options = True
-    | otherwise = False
-    where options = legalMoves board turn
-
+makeMove board (b,s) turn player =
+    case (a,j) of
+        (True, False) -> Nothing -- already in the moves
+        (False, False) -> Nothing -- invalid bounds
+        (False, True) -> Just $ perfectMove board (b,s) player
+        (True, True) -> Nothing
+    where
+        options = legalMoves board turn
+        a = b < 0 || s < 0 || b > 8 || s > 8 -- we want to be false
+        j = (b,s) `elem` options -- we want to be true
+        
 -- | returns the legal moves for a board
 lMoveHelper a b = (a,b)
 legalMoves :: BBoard -> Turn -> [Move]
