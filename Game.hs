@@ -48,10 +48,10 @@ getLocs player board = map fst $ filter (\(a,b) -> b == player) board
 --
 -- what if the move isn't valid? -> Nothing
 
-makeMove :: BBoard -> Move -> Player -> BBoard
-makeMove [] (a,b) player = [( a, [( b, player)])]
-makeMove board (a,b) player
-    | not $ a `elem` (map fst board) = makeMove [] (a,b) player ++ board
+perfectMove :: BBoard -> Move -> Player -> BBoard
+perfectMove [] (a,b) player = [( a, [( b, player)])]
+perfectMove board (a,b) player
+    | not $ a `elem` (map fst board) = perfectMove [] (a,b) player ++ board
     | otherwise = d:x
     where x = filter (\c -> a /= fst c) board
           (y,z) = head $ filter (\c -> a == fst c) board
@@ -68,9 +68,9 @@ makeMove board (a,b) player
 --if it isn't in the 0..8
 --that it's in legal
 
-madeMove :: BBoard -> Move -> Turn -> Player -> Maybe BBoard
-madeMove board move turn player
-    | filterMove board move turn = Just $ makeMove board move player
+makeMove :: BBoard -> Move -> Turn -> Player -> Maybe BBoard
+makeMove board move turn player
+    | filterMove board move turn = Just $ perfectMove board move player
     | otherwise = Nothing
 
 filterMove:: BBoard -> Move -> Turn -> Bool
@@ -84,8 +84,8 @@ filterMove board (b,s) turn
 -- | returns the legal moves for a board
 legalMoves :: BBoard -> Turn -> [Move]
 lMoveHelper a b = (a,b)
-legalMoves :: BBoard -> Turn -> [Move]
-legalMoves board turn = map lMoveHelper (snd board) ([0..8]\\[fst a | a <- (board !! (snd turn))])
+legalMoves board turn = undefined
+    -- map lMoveHelper (snd board) ([0..8]\\[fst a | a <- (board !! (snd turn))])
 --Q is working on this
 
 

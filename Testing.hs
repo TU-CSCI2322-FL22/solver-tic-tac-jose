@@ -10,7 +10,7 @@ import Board
 import Game
 import Data.ByteString (putStrLn)
 import Board (State(Going), Player (X))
-import Game (showBoard, legalMoves, madeMove)
+import Game (showBoard, legalMoves, makeMove)
 import GHC.Base (undefined)
 import Data.List (replicate)
 import Data.Maybe (Maybe(Nothing))
@@ -65,13 +65,13 @@ milestoneOne =
                 
         describe "Make move" $ do
             it "empty X top left" $ do
-                madeMove [] (0,0) (O,0) X `shouldBe` Just [(0,[(0,X)])]
+                makeMove [] (0,0) (O,0) X `shouldBe` Just [(0,[(0,X)])]
             it "empty O bottom right" $ do
-                madeMove [] (8,8) (X,8) O `shouldBe` Just [(8,[(8,O)])]
+                makeMove [] (8,8) (X,8) O `shouldBe` Just [(8,[(8,O)])]
             it "full board" $ do
-                madeMove testBoardX (4,4) (O,4) X `shouldBe` Nothing
+                makeMove testBoardX (4,4) (O,4) X `shouldBe` Nothing
             it "incorrect space" $ do
-                madeMove [] (8,8) (O,0) X `shouldBe` Nothing
+                makeMove [] (8,8) (O,0) X `shouldBe` Nothing
 
 runTests :: IO()
 runTests = hspec $ do
