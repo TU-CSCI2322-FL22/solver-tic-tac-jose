@@ -93,8 +93,9 @@ filterMove board (b,s) turn
 -- | returns the legal moves for a board
 lMoveHelper a b = (a,b)
 legalMoves :: BBoard -> Turn -> [Move]
-legalMoves board turn = map (lMoveHelper (snd turn)) ([0..8]\\[fst a | a <- snd (board !! (fromIntegral (snd turn)))])
-    -- map lMoveHelper (snd board) ([0..8]\\[fst a | a <- (board !! (snd turn))])
+legalMoves board turn = if not ((snd turn) `elem` [fst a | a<-board]) then map (lMoveHelper (snd turn)) [0..8] 
+                        else  map (lMoveHelper (snd turn)) ([0..8]\\[fst b | b<-snd (head [ a | a <- board, fst a == snd turn])])
+
 --Q is working on this
 
 
