@@ -12,6 +12,7 @@ import Testing (runTests)
 import GHC.Base (undefined)
 import Data.Bool (Bool(False))
 import Game (ioBoard)
+import FileIO
 
 -- https://downloads.haskell.org/~ghc/4.06/docs/hslibs/sec-getopt.html
 
@@ -90,6 +91,10 @@ main = do
     then do 
         x <- readFile $ head args 
         showIO x
+    
+    else if optVerbose opts
+    then do
+        writeBoard [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])] "test.txt"
 
     else if optWin opts
         then putStrLn $ "print a winner" ++ (show $ optDepth opts)
