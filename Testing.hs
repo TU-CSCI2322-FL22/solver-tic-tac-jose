@@ -14,6 +14,7 @@ import Game (showBoard, legalMoves, makeMove)
 import GHC.Base (undefined)
 import Data.List (replicate)
 import Data.Maybe (Maybe(Nothing))
+import Data.Bool (Bool(True))
 
 
 -- when some are filled in feel free to comment ot tests here
@@ -91,9 +92,17 @@ milestoneOne =
             it "incorrect space" $ do
                 makeMove [] (8,8) (O,0) X `shouldBe` Nothing
 
+milestoneTwo = 
+    do
+        describe "placeholder" $ do
+            describe "sub placeholder" $ do
+                it "even more sub placeholder" $ do
+                    1 == 1 `shouldBe` True
 
 runTests :: IO()
-runTests =    
+runTests =   
     withArgs [] $ hspec $ do
         describe "Milestone 1" $ do
             milestoneOne
+        describe "Milestone 2" $ do
+            milestoneTwo
