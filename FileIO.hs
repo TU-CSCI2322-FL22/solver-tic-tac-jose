@@ -75,7 +75,6 @@ showBoard board =
 readGame :: String -> Game
 readGame str =
     let a = lines str
-        [b,c] = takeN 9 a
         d = take 9 a
         firstSquare = gradeN 0 (take 3 d)
 
@@ -89,6 +88,7 @@ readGame str =
 
         comb = filter (\(a,b) -> not $ null b) z
 
+        [b,c] = takeN 9 a
         m = case b of
             "X" -> X
             "O" -> O
@@ -97,31 +97,31 @@ readGame str =
 
     in (comb,(m,n))
 
+gradeN :: Integer -> [String] -> BBoard
 gradeN n str =
-    let a = [take 3 x | x <- str]
-        c = foldl1 (++) a
-        d = (n, number 0 c) -- first set
+    let 
+        second = [takeN 3 x | x <- str]
+        third = [takeN 3 x | x <- second]
 
-        b = [takeN 3 x | x<- str]
-        e = [take 3 x | x <- b]
-        f = foldl1 (++) e
-        g = (n+1,number 0 f) -- second set
+        a = rows str n
+        b = rows second (n+1)
+        c = rows third (n+2)
 
-        h = [takeN 3 x | x<- b]
-        i = [take 3 x | x <- h]
-        j = foldl1 (++) i
-        k = (n+2,number 0 j) -- second set
+        d = [a,b,c]
 
-    in ([d] ++ [g] ++ [k])
+    in d
+    where
+        rows lst cnt = (cnt, number 0 $ foldl1 (++) [take 3 x | x <- lst])
 
 -- number :: Num a => a -> [Char] -> [(Player, a)]
+number :: Integer -> [Char] -> [(Integer, Player)]
 number n [] = []
 number n (x:xs)
     | x == 'X' = (n,X) : number (n+1) xs
     | x == 'O' = (n,O) : number (n+1) xs
     | otherwise = number (n+1) xs
 
-a = "---------\n---------\n---------\n---------\n----X----\n---------\n---------\n---------\n---------\nX\n4"
+a = "--------O\n---------\n---------\n---------\n----X----\n---------\n---------\n---------\n---------\nX\n4"
 c = lines "XXXOOOXXX\naXc456789\nxyz------\n"
 
 writeGame::Game-> String -> IO()

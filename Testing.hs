@@ -95,11 +95,11 @@ milestoneOne =
 
 milestoneTwo = 
     do
-        describe "placeholder" $ do
-            describe "sub placeholder" $ do
-                it "even more sub placeholder" $ do
-                    1 == 1 `shouldBe` True
-
+        describe "Read game" $ do
+            it "top left" $ do
+                readGame "X--------\n---------\n---------\n---------\n---------\n---------\n---------\n---------\n---------\nX\n0" `shouldBe` ([(0,[(0,X)])],(X,0))
+            it "other" $ do
+                readGame "--------O\n---------\n---------\n---------\n----X----\n---------\n---------\n---------\n---------\nX\n4" `shouldBe` ([(2,[(2,O)]),(4,[(4,X)])],(X,4))
 runTests :: IO()
 runTests =   
     withArgs [] $ hspec $ do
