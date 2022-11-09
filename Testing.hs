@@ -10,7 +10,8 @@ import Control.Exception (evaluate)
 import Board
 import Game
 import Board (State(Going), Player (X), Outcome (Tie))
-import Game (showBoard, legalMoves, makeMove)
+import Game (legalMoves, makeMove)
+import FileIO
 import GHC.Base (undefined)
 import Data.List (replicate)
 import Data.Maybe (Maybe(Nothing))

@@ -98,75 +98,11 @@ makeTurn player int = (player,int)
 listTurn :: Turn -> BBoard -> [(Player, Integer)]
 listTurn turn board = map (makeTurn (fst turn)) (validLBoard board)
 
+lMoveHelper:: a -> b -> (a,b)
 lMoveHelper a b = (a,b)
+
 legalMoves :: BBoard -> Turn -> [Move]
 legalMoves board turn
             | not ((snd turn) `elem` (validLBoard board)) = concat (map (legalMoves board) (listTurn turn board))
             | not ((snd turn) `elem` [fst a | a<-board]) = map (lMoveHelper (snd turn)) [0..8] 
             | otherwise = map (lMoveHelper (snd turn)) ([0..8]\\[fst b | b<-snd (head [ a | a <- board, fst a == snd turn])])
-
-
--- | prints the board
-ioBoard :: BBoard -> IO ()
-ioBoard board =
-    do
-        let j = foldr1 (\a b -> a++"\n"++b) $ pipeVert [pipeRow x | x <- (showBoard board)]
-        putStrLn j
-    where
-        -- ^ drops the first N elements from a list
-        takeN::Integer -> [a] -> [a]
-        takeN n [] = []
-        takeN 0 lst = lst
-        takeN n (x:xs) =
-            takeN (n-1) xs
-        -- ^ adds the vertical markers "||" to the string (adds them to the row)
-        --
-        -- used for the formatting of the output
-        -- to change, change the marker
-        pipeRow::String -> String
-        pipeRow lst =
-            let marker = " | "
-            in take 3 lst ++ marker ++ take 3 (takeN 3 lst) ++ marker ++ take 3 (takeN 6 lst)
-
-        -- ^ adds the horizontal markers "==..." to the string (adds them to the list)
-        --
-        -- used for the formatting of the output
-        -- to change, change the marker
-        pipeVert::[String] -> [String]
-        pipeVert lst =
-            let marker = replicate 15 '='
-            in take 3 lst ++ [marker] ++ take 3 (takeN 3 lst) ++ [marker] ++ takeN 6 lst
-
--- needs to use case statements
-
--- ^ actually goes through the structure and makes the list of strings
-showBoard::BBoard -> [String]
-showBoard board =
-    [foldr1 (++) [indexString $ getIndex (x,y) board  | x <- [z..z+2], y <- [v..v+2]] | z <- [0,3,6], v <- [0,3,6]]
-    where
-        -- ^ Converts the data type to String
-        indexString::Maybe Player -> String
-        indexString x = 
-            case x of
-                Nothing -> "-"
-                Just X -> "X"
-                Just O -> "O"
-
-        -- ^ Get's an index. 
-        --
-        -- Might be schlemiely
-        getIndex::Move -> BBoard -> Maybe Player
-        getIndex _ [] = Nothing
-        getIndex (x,y) ((a,b):xs)
-            | a == x = getSub y b
-            | otherwise = getIndex (x,y) xs
-            where
-                -- ^ Gets the sub board
-                --
-                -- Helper for getIndex
-                getSub::Integer -> LBoard -> Maybe Player
-                getSub _ [] = Nothing
-                getSub y ((a,b):xs)
-                    | y == a = Just b
-                    | otherwise = getSub y xs
-

@@ -32,6 +32,8 @@ data Outcome = Win Player | Tie deriving (Show, Eq)
 
 data State = Done Outcome | Going deriving (Show, Eq)
 
+type Game = (BBoard, Turn)
+
 -- 3 outcomes of a game
 -- X win, Y win, Tie    
 
