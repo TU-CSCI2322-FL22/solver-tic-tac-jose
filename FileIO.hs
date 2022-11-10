@@ -133,7 +133,7 @@ loadGame :: FilePath -> IO Game
 loadGame file = do
     contents <- readFile file
     -- let shunt = fileLoad contents
-    return (fileLoad contents)
+    return (readGame contents)
 
 fileLoad :: String -> Game
 fileLoad str =

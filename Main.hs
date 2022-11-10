@@ -95,9 +95,10 @@ main = do
     else if optVerbose opts
     then do
         -- writeBoard [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])] (X,0) "test.txt"
-        writeGame ([(0,[(0,O)])],(X,0)) "test.txt"
+        --writeGame ([(0,[(0,O)])],(X,0)) "test.txt"
         -- putStrLn (loadGame "example.bd")
-        --loadGame "example.bd"
+        boar <- loadGame "example.bd"
+        writeGame boar "output.txt"
         -- putStrLn "test"
         -- putStrLn "nothing yet"
 
