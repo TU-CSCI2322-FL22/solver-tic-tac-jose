@@ -13,6 +13,8 @@ import GHC.Base (undefined)
 import Data.Bool (Bool(False))
 import Game
 import FileIO
+import FileIO (loadGame)
+import PrettyIO (prettyGame)
 
 -- https://downloads.haskell.org/~ghc/4.06/docs/hslibs/sec-getopt.html
 
@@ -21,10 +23,12 @@ data Options = Options {
   , optTest              :: Bool
   , optShow              :: Bool
   , optWin               :: Bool
-  , optDepth             :: Int
-  , optMove              :: Int
+  , optDepth             :: Integer
+  , optMove              :: Integer
   , optVerbose           :: Bool
   , optInt               :: Bool
+  , optPrint             :: Bool
+--   , optFile              :: String
 --   , trainingImagesPath   :: FilePath
 --   , defaultPath          :: FilePath
 } deriving Show
@@ -39,6 +43,8 @@ defaultOptions = Options {
    , optMove = 0
    , optVerbose = False
    , optInt = False
+   , optPrint = False
+--    , optFile = ""
 --    , trainingImagesPath = "digitdata/trainingimages"
 --    , defaultPath = "fake"
  }
@@ -54,7 +60,11 @@ options = [
     Option ['m'] ["move"] (ReqArg (\n opts -> opts { optMove = read n }) "N") "Make's move and prints board",
 
     Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move",
-    Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play"
+    Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play",
+    Option ['p'] ["print"] (NoArg (\opts -> opts {optPrint = True})) "pretty prints a given board"
+
+    -- Option [] [] (ReqArg (\path opts -> opts { optFile = path}) "DIR") "default board input?"
+    -- Option [] [] (ReqArg (\path opts -> opts { defaultPath = path }) "DIR") "Override the path for training images"
 
     -- Option []    ["train-image"] (ReqArg (\path opts -> opts { trainingImagesPath = path }) "DIR") "Override the path for training images"
     -- Option [] [] (ReqArg (\path opts -> opts { defaultPath = path }) "DIR") "Override the path for training images"
@@ -72,14 +82,20 @@ compilerOpts argv =
 main :: IO ()
 main = do
     args <- getArgs
+    -- putStrLn $ show args
+
     -- putStrLn $ show $ (head . head) args
     -- putStrLn $ show $ (tail) args
     (opts, errs) <- if null args || ((head . head) args == '-') then compilerOpts args else compilerOpts $ tail args
+    
+    -- print opts
+
     if not (null errs)
     then do
         mapM putStrLn errs
         error "errors were thrown on input"
         return ()
+    
 
     else if optHelp opts
     then helpIO
@@ -101,11 +117,14 @@ main = do
         writeGame boar "output.txt"
         -- putStrLn "test"
         -- putStrLn "nothing yet"
-
-    else if optWin opts
-        then putStrLn $ "print a winner" ++ (show $ optDepth opts)
-        else do
-            error "No matching args were given"
+    
+    else case args of 
+        [x] -> defaultIO x
+        (x:xs) -> putStrLn "too many args!"
+        _ ->  if optWin opts
+            then putStrLn $ "print a winner" ++ (show $ optDepth opts)
+            else do
+                error "No matching args were given"
 
 helpIO :: IO()
 helpIO = putStrLn $ usageInfo usage options
@@ -118,3 +137,9 @@ testIO =
 showIO :: String -> IO()
 showIO string =
     putStrLn string
+
+defaultIO :: String -> IO()
+defaultIO x =
+    do 
+        a <- loadGame x
+        putStrLn $ prettyGame a
