@@ -12,12 +12,19 @@ takeN 0 lst = lst
 takeN n (x:xs) =
     takeN (n-1) xs
 
--- | prints the board
+-- | pretty prints the board
+-- ioBoard :: BBoard -> IO ()
+
 ioBoard :: BBoard -> IO ()
-ioBoard board =
+ioBoard board = 
     do
-        let j = foldr1 (\a b -> a++"\n"++b) $ pipeVert [pipeRow x | x <- (showBoard board)]
-        putStrLn j
+    putStrLn $ prettyBoard board
+    
+prettyBoard :: BBoard -> String
+prettyBoard board =
+    -- do
+        foldr1 (\a b -> a++"\n"++b) $ pipeVert [pipeRow x | x <- showBoard board]
+        -- putStrLn j
     where
 
         -- ^ adds the vertical markers "||" to the string (adds them to the row)
@@ -38,8 +45,18 @@ ioBoard board =
             let marker = replicate 15 '='
             in take 3 lst ++ [marker] ++ take 3 (takeN 3 lst) ++ [marker] ++ takeN 6 lst
 
+ioGame :: Game -> IO ()
+ioGame game = 
+    do
+    putStrLn $ prettyGame game
+
+prettyGame :: Game -> String
+prettyGame (board, (symbol, num)) =
+    prettyBoard board ++ "\n" ++  show symbol ++ "\n" ++ show num
+
 -- needs to use case statements
 
+-- ioGame :: Game -> IO()
 
 
 -- ^ actually goes through the structure and makes the list of strings
@@ -78,14 +95,14 @@ showBoard board =
 
 readGame :: String -> Game
 readGame str =
-    let a = lines str
-        d = take 9 a
+    let arr = lines str
+        d = take 9 arr
 
-        v = filter (\(a,b) -> not $ null b) $ foldr1 (++) $ map (square d) [0,3,6]
+        v = filter (\(_,b) -> not $ null b) $ foldr1 (++) $ map (square d) [0,3,6]
 
         square lst n = gradeN n $ take 3 $ takeN n lst
 
-        [b,c] = takeN 9 a
+        [b,c] = takeN 9 arr
         m = case b of
             "X" -> X
             "O" -> O
@@ -93,13 +110,15 @@ readGame str =
         n = read c :: Integer
 
     in (v,(m,n))
+
     where
     gradeN :: Integer -> [String] -> BBoard
     gradeN n str =
         let
             second = [takeN 3 x | x <- str]
             third = [takeN 6 x | x <- str]
-        in map (\(lst, cnt) -> (cnt, number 0 $ foldl1 (++) [take 3 x | x <- lst])) [(str, n), (second, n+1), (third, n+2)]
+            lst = [(str, n), (second, n+1), (third, n+2)]
+        in map (\(lst, cnt) -> (cnt, number 0 $ foldl1 (++) [take 3 x | x <- lst])) lst
 
     number :: Integer -> [Char] -> [(Integer, Player)]
     number n [] = []

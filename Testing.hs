@@ -16,7 +16,7 @@ import GHC.Base (undefined)
 import Data.List (replicate)
 import Data.Maybe (Maybe(Nothing))
 import Data.Bool (Bool(True))
-
+import Solver
 
 -- when some are filled in feel free to comment ot tests here
 testBoardOne = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
@@ -104,7 +104,12 @@ milestoneTwo =
                 readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldBe` (testBoardX,(O,8))
             it "full board shouldn't be empty" $ do
                 readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldNotBe` ([],(O,8))
-
+        describe "Who Wins" $ do
+            it "diagonal of x's on x's turn" $ do
+                whoWins ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(O,8)) `shouldBe` Win X
+            it "diagonal of O's on O's turn" $ do
+                whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` Win X
+                -- readGame "X--------\n"
 runTests :: IO()
 runTests =   
     withArgs [] $ hspec $ do
