@@ -100,6 +100,11 @@ milestoneTwo =
                 readGame "X--------\n---------\n---------\n---------\n---------\n---------\n---------\n---------\n---------\nX\n0" `shouldBe` ([(0,[(0,X)])],(X,0))
             it "other" $ do
                 readGame "--------O\n---------\n---------\n---------\n----X----\n---------\n---------\n---------\n---------\nX\n4" `shouldBe` ([(2,[(2,O)]),(4,[(4,X)])],(X,4))
+            it "full board" $ do
+                readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldBe` (testBoardX,(O,8))
+            it "full board shouldn't be empty" $ do
+                readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldNotBe` ([],(O,8))
+
 runTests :: IO()
 runTests =   
     withArgs [] $ hspec $ do

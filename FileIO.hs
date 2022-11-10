@@ -76,17 +76,16 @@ readGame :: String -> Game
 readGame str =
     let a = lines str
         d = take 9 a
+
         firstSquare = gradeN 0 (take 3 d)
 
-        sec = takeN 3 d
-        secondSquare = gradeN 3 (take 3 sec)
+        secondSquare = gradeN 3 (take 3 (takeN 3 d))
 
-        thr = takeN 6 d
-        thrdSquare = gradeN 6 (take 3 thr)
-        
-        z = firstSquare ++ secondSquare ++ thrdSquare
+        -- thrdSquare = gradeN 6 (take 3 (takeN 6 d))
+        -- thrdSquare = square 6 
+        v = (filter (\(a,b) -> not $ null b) . foldr1 (++) . map (square d)) [0,3,6]
 
-        comb = filter (\(a,b) -> not $ null b) z
+        square lst n = gradeN n $ take 3 $ takeN n lst
 
         [b,c] = takeN 9 a
         m = case b of
@@ -95,7 +94,7 @@ readGame str =
             _ -> error "invalid first move"
         n = read c :: Integer
 
-    in (comb,(m,n))
+    in (v,(m,n))
     where
     gradeN :: Integer -> [String] -> BBoard
     gradeN n str =
