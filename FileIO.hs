@@ -96,30 +96,20 @@ readGame str =
         n = read c :: Integer
 
     in (comb,(m,n))
-
-gradeN :: Integer -> [String] -> BBoard
-gradeN n str =
-    let 
-        second = [takeN 3 x | x <- str]
-        third = [takeN 3 x | x <- second]
-
-        a = rows str n
-        b = rows second (n+1)
-        c = rows third (n+2)
-
-        d = [a,b,c]
-
-    in d
     where
-        rows lst cnt = (cnt, number 0 $ foldl1 (++) [take 3 x | x <- lst])
+    gradeN :: Integer -> [String] -> BBoard
+    gradeN n str =
+        let 
+            second = [takeN 3 x | x <- str]
+            third = [takeN 6 x | x <- str]
+        in map (\(lst, cnt) -> (cnt, number 0 $ foldl1 (++) [take 3 x | x <- lst])) [(str, n), (second, n+1), (third, n+2)]
 
--- number :: Num a => a -> [Char] -> [(Player, a)]
-number :: Integer -> [Char] -> [(Integer, Player)]
-number n [] = []
-number n (x:xs)
-    | x == 'X' = (n,X) : number (n+1) xs
-    | x == 'O' = (n,O) : number (n+1) xs
-    | otherwise = number (n+1) xs
+    number :: Integer -> [Char] -> [(Integer, Player)]
+    number n [] = []
+    number n (x:xs)
+        | x == 'X' = (n,X) : number (n+1) xs
+        | x == 'O' = (n,O) : number (n+1) xs
+        | otherwise = number (n+1) xs
 
 a = "--------O\n---------\n---------\n---------\n----X----\n---------\n---------\n---------\n---------\nX\n4"
 c = lines "XXXOOOXXX\naXc456789\nxyz------\n"
