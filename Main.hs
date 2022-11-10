@@ -29,10 +29,7 @@ data Options = Options {
   , optMove              :: String
   , optVerbose           :: Bool
   , optInt               :: Bool
-  , optPrint             :: String
---   , optFile              :: String
---   , trainingImagesPath   :: FilePath
---   , defaultPath          :: FilePath
+  , optPrint             :: FilePath
 } deriving Show
 
 defaultOptions :: Options
@@ -45,9 +42,6 @@ defaultOptions = Options {
    , optVerbose = False
    , optInt = False
    , optPrint = ""
---    , optFile = ""
---    , trainingImagesPath = "digitdata/trainingimages"
---    , defaultPath = "fake"
  }
 
 options :: [OptDescr (Options -> Options)]
@@ -56,18 +50,12 @@ options = [
     Option ['t'] ["test"] (NoArg (\opts -> opts { optTest = True})) "Runs a series of tests on your code",
     Option ['w'] ["winner"] (NoArg (\opts -> opts {optWin = True})) "Prints the best move",
 
-    Option ['d'] ["depth"] (ReqArg (\n opts -> opts { optDepth = read n }) "N") "cutoff depth",
-    Option ['m'] ["move"] (ReqArg (\n opts -> opts { optMove = n }) "X,Y") "Make's move and prints board",
+    Option ['d'] ["depth"] (ReqArg (\depth opts -> opts { optDepth = read depth }) "N") "cutoff depth",
+    Option ['m'] ["move"] (ReqArg (\move opts -> opts { optMove = move }) "X,Y") "Make's move and prints board",
 
     Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move",
     Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play",
-    Option ['p'] ["print"] (ReqArg (\n opts -> opts {optPrint = n}) "filename") "pretty prints a given board"
-
-    -- Option [] [] (ReqArg (\path opts -> opts { optFile = path}) "DIR") "default board input?"
-    -- Option [] [] (ReqArg (\path opts -> opts { defaultPath = path }) "DIR") "Override the path for training images"
-
-    -- Option []    ["train-image"] (ReqArg (\path opts -> opts { trainingImagesPath = path }) "DIR") "Override the path for training images"
-    -- Option [] [] (ReqArg (\path opts -> opts { defaultPath = path }) "DIR") "Override the path for training images"
+    Option ['p'] ["print"] (ReqArg (\path opts -> opts {optPrint = path}) "DIR") "pretty prints a given board"
     ]
 
 compilerOpts :: [String] -> IO (Options, [String])
