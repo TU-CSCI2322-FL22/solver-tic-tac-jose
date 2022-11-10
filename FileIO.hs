@@ -15,44 +15,6 @@ takeN n (x:xs) =
 -- | pretty prints the board
 -- ioBoard :: BBoard -> IO ()
 
-ioBoard :: BBoard -> IO ()
-ioBoard board = 
-    do
-    putStrLn $ prettyBoard board
-    
-prettyBoard :: BBoard -> String
-prettyBoard board =
-    -- do
-        foldr1 (\a b -> a++"\n"++b) $ pipeVert [pipeRow x | x <- showBoard board]
-        -- putStrLn j
-    where
-
-        -- ^ adds the vertical markers "||" to the string (adds them to the row)
-        --
-        -- used for the formatting of the output
-        -- to change, change the marker
-        pipeRow::String -> String
-        pipeRow lst =
-            let marker = " | "
-            in take 3 lst ++ marker ++ take 3 (takeN 3 lst) ++ marker ++ take 3 (takeN 6 lst)
-
-        -- ^ adds the horizontal markers "==..." to the string (adds them to the list)
-        --
-        -- used for the formatting of the output
-        -- to change, change the marker
-        pipeVert::[String] -> [String]
-        pipeVert lst =
-            let marker = replicate 15 '='
-            in take 3 lst ++ [marker] ++ take 3 (takeN 3 lst) ++ [marker] ++ takeN 6 lst
-
-ioGame :: Game -> IO ()
-ioGame game = 
-    do
-    putStrLn $ prettyGame game
-
-prettyGame :: Game -> String
-prettyGame (board, (symbol, num)) =
-    prettyBoard board ++ "\n" ++  show symbol ++ "\n" ++ show num
 
 -- needs to use case statements
 
@@ -131,7 +93,7 @@ showGame :: Game -> String
 showGame (board,(symbol, num)) =
     foldr1 (\a b -> a++"\n"++b) (showBoard board) ++ "\n" ++  show symbol ++ "\n" ++ show num
 
-writeGame::Game-> FilePath -> IO()
+writeGame::Game -> FilePath -> IO()
 writeGame game file =
     writeFile file $ showGame game
 
