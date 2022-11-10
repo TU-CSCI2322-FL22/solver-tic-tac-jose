@@ -52,12 +52,12 @@ defaultOptions = Options {
 
 options :: [OptDescr (Options -> Options)]
 options = [
-    Option ['h'] ["help"] (NoArg (\opts -> opts { optHelp = True })) "Print a help message and exit.",
-    Option ['t'] ["test"] (NoArg (\opts -> opts { optTest = True })) "Runs a series of tests on your code",
+    Option ['h'] ["help"] (NoArg (\opts -> opts { optHelp = True})) "Print a help message and exit.",
+    Option ['t'] ["test"] (NoArg (\opts -> opts { optTest = True})) "Runs a series of tests on your code",
     Option ['w'] ["winner"] (NoArg (\opts -> opts {optWin = True})) "Prints the best move",
 
-    Option ['d'] ["depth"] (ReqArg (\n opts -> opts { optDepth = read n }) "X,Y") "cutoff depth",
-    Option ['m'] ["move"] (ReqArg (\n opts -> opts { optMove = n }) "N") "Make's move and prints board",
+    Option ['d'] ["depth"] (ReqArg (\n opts -> opts { optDepth = read n }) "N") "cutoff depth",
+    Option ['m'] ["move"] (ReqArg (\n opts -> opts { optMove = n }) "X,Y") "Make's move and prints board",
 
     Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move",
     Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play",
