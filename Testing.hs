@@ -10,12 +10,13 @@ import Control.Exception (evaluate)
 import Board
 import Game
 import Board (State(Going), Player (X), Outcome (Tie))
-import Game (showBoard, legalMoves, makeMove)
+import Game (legalMoves, makeMove)
+import FileIO
 import GHC.Base (undefined)
 import Data.List (replicate)
 import Data.Maybe (Maybe(Nothing))
 import Data.Bool (Bool(True))
-
+import Solver
 
 -- when some are filled in feel free to comment ot tests here
 testBoardOne = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
@@ -94,10 +95,20 @@ milestoneOne =
 
 milestoneTwo = 
     do
-        describe "placeholder" $ do
-            describe "sub placeholder" $ do
-                it "even more sub placeholder" $ do
-                    1 == 1 `shouldBe` True
+        describe "Read game" $ do
+            it "top left" $ do
+                readGame "X--------\n---------\n---------\n---------\n---------\n---------\n---------\n---------\n---------\nX\n0" `shouldBe` ([(0,[(0,X)])],(X,0))
+            it "other" $ do
+                readGame "--------O\n---------\n---------\n---------\n----X----\n---------\n---------\n---------\n---------\nX\n4" `shouldBe` ([(2,[(2,O)]),(4,[(4,X)])],(X,4))
+            it "full board" $ do
+                readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldBe` (testBoardX,(O,8))
+            it "full board shouldn't be empty" $ do
+                readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldNotBe` ([],(O,8))
+        describe "Who Wins" $ do
+            it "diagonal of x's on x's turn" $ do
+                whoWins ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(O,8)) `shouldBe` Win X
+            it "diagonal of O's on O's turn" $ do
+                whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` Win X
 
 runTests :: IO()
 runTests =   
