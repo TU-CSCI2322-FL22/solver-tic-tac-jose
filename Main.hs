@@ -105,27 +105,9 @@ main = do
     else if optTest opts
     then do testIO
 
+    --CHECKS FOR MOVE IO -- THEN MAKES THE MOVE
     else if optMove opts /= ""
     then do moveIO (optMove opts) file
-        --moveIO optMove
-
-
-    -- else if optShow opts
-    -- then do 
-    --     x <- readFile $ head args 
-    --     showIO x
-    
-    else if optVerbose opts
-    then do
-        -- writeBoard [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])] (X,0) "test.txt"
-        --writeGame ([(0,[(0,O)])],(X,0)) "test.txt"
-        -- putStrLn (loadGame "example.bd")
-        boar <- loadGame "example.bd"
-        writeGame boar "output.txt"
-        -- putStrLn "test"
-        -- putStrLn "nothing yet"
-
-    -- special cases control flow
     
     else case args of 
         [x] -> defaultIO x
@@ -150,8 +132,7 @@ moveIO str file =
         case z of
             Just z -> do putStrLn $ prettyBoard z
             Nothing -> do ioError $ userError "move could not be made!"
-        -- prettyBoard $ makeMove board (x,y) (player, place) (if player == X then O else X)
-        -- return()
+
     
 
 defaultIO :: String -> IO()
@@ -163,6 +144,3 @@ defaultIO x =
 noneIO :: IO()
 noneIO = 
     putStrLn "jose: no command given (try --help)"
-
-extraIO =
-    putStrLn "unrecognized arguments were given"
