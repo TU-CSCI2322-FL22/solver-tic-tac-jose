@@ -29,7 +29,7 @@ data Options = Options {
   , optMove              :: String
   , optVerbose           :: Bool
   , optInt               :: Bool
-  , optPrint             :: Bool
+  , optPrint             :: String
 --   , optFile              :: String
 --   , trainingImagesPath   :: FilePath
 --   , defaultPath          :: FilePath
@@ -44,7 +44,7 @@ defaultOptions = Options {
    , optMove = ""
    , optVerbose = False
    , optInt = False
-   , optPrint = False
+   , optPrint = ""
 --    , optFile = ""
 --    , trainingImagesPath = "digitdata/trainingimages"
 --    , defaultPath = "fake"
@@ -61,7 +61,7 @@ options = [
 
     Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move",
     Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play",
-    Option ['p'] ["print"] (NoArg (\opts -> opts {optPrint = True})) "pretty prints a given board"
+    Option ['p'] ["print"] (ReqArg (\n opts -> opts {optPrint = n}) "filename") "pretty prints a given board"
 
     -- Option [] [] (ReqArg (\path opts -> opts { optFile = path}) "DIR") "default board input?"
     -- Option [] [] (ReqArg (\path opts -> opts { defaultPath = path }) "DIR") "Override the path for training images"
@@ -74,7 +74,9 @@ compilerOpts :: [String] -> IO (Options, [String])
 compilerOpts argv =
   case getOpt Permute options argv of
      (o,n,[]  ) -> return (foldl (flip id) defaultOptions o, n)
-     (_,_,errs) -> ioError $ userError $ "jose.exe: user error (\n" ++ concat errs -- ++ concat errs
+     (_,_,errs) -> do
+                    putStrLn $ foldr1(++) errs
+                    ioError $ userError ""-- ++ concat errs -- ++ concat errs
 
   where header = "Usage: classifier [OPTION...]"
 
@@ -105,6 +107,9 @@ main = do
     else if optTest opts
     then do testIO
 
+    else if optPrint opts /= ""
+    then do printIO (optPrint opts)
+
     --CHECKS FOR MOVE IO -- THEN MAKES THE MOVE
     else if optMove opts /= ""
     then do moveIO (optMove opts) file
@@ -121,6 +126,13 @@ helpIO = putStrLn $ usageInfo usage options
 testIO :: IO()
 testIO =
     runTests
+
+printIO :: String -> IO()
+printIO str =
+    do
+        a <- loadGame str
+        putStrLn $ prettyGame a
+
 
 moveIO :: String -> FilePath -> IO()
 moveIO str file =
