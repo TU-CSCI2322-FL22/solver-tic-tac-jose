@@ -14,17 +14,19 @@ import Data.Bool (Bool(False))
 import Game
 import FileIO
 import FileIO (loadGame)
-import PrettyIO (prettyGame)
+import PrettyIO (prettyGame, prettyBoard)
+import GHC.IO.Exception (userError)
+-- import Data.ByteString (putStrLn)
+import Data.List.Split
 
 -- https://downloads.haskell.org/~ghc/4.06/docs/hslibs/sec-getopt.html
 
 data Options = Options {
     optHelp              :: Bool
   , optTest              :: Bool
-  , optShow              :: Bool
   , optWin               :: Bool
   , optDepth             :: Integer
-  , optMove              :: Integer
+  , optMove              :: String
   , optVerbose           :: Bool
   , optInt               :: Bool
   , optPrint             :: Bool
@@ -37,10 +39,9 @@ defaultOptions :: Options
 defaultOptions = Options {
      optHelp = False
    , optTest = False
-   , optShow = False
    , optWin = False
    , optDepth = 0
-   , optMove = 0
+   , optMove = ""
    , optVerbose = False
    , optInt = False
    , optPrint = False
@@ -53,11 +54,10 @@ options :: [OptDescr (Options -> Options)]
 options = [
     Option ['h'] ["help"] (NoArg (\opts -> opts { optHelp = True })) "Print a help message and exit.",
     Option ['t'] ["test"] (NoArg (\opts -> opts { optTest = True })) "Runs a series of tests on your code",
-    Option ['s'] ["show"] (NoArg (\opts -> opts { optShow = True })) "Prints a board",
     Option ['w'] ["winner"] (NoArg (\opts -> opts {optWin = True})) "Prints the best move",
 
-    Option ['d'] ["depth"] (ReqArg (\n opts -> opts { optDepth = read n }) "N") "cutoff depth",
-    Option ['m'] ["move"] (ReqArg (\n opts -> opts { optMove = read n }) "N") "Make's move and prints board",
+    Option ['d'] ["depth"] (ReqArg (\n opts -> opts { optDepth = read n }) "X,Y") "cutoff depth",
+    Option ['m'] ["move"] (ReqArg (\n opts -> opts { optMove = n }) "N") "Make's move and prints board",
 
     Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move",
     Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play",
@@ -74,10 +74,9 @@ compilerOpts :: [String] -> IO (Options, [String])
 compilerOpts argv =
   case getOpt Permute options argv of
      (o,n,[]  ) -> return (foldl (flip id) defaultOptions o, n)
-     (_,_,errs) -> ioError (userError (concat errs ++ usageInfo header options))
-  where header = "Usage: classifier [OPTION...]"
+     (_,_,errs) -> ioError $ userError $ "jose.exe: user error (\n" ++ concat errs -- ++ concat errs
 
--- (show $ optDepth opts) -- how to get the # out of it
+  where header = "Usage: classifier [OPTION...]"
 
 main :: IO ()
 main = do
@@ -88,25 +87,33 @@ main = do
     -- putStrLn $ show $ (tail) args
     (opts, errs) <- if null args || ((head . head) args == '-') then compilerOpts args else compilerOpts $ tail args
     
-    -- print opts
+    --SNAGS FILE STRING
+    let file = if (head . head) args == '-' then "" else (head args)
 
+    --SEARCHES FOR ERRORS
     if not (null errs)
     then do
         mapM putStrLn errs
         error "errors were thrown on input"
         return ()
-    
 
+    --CHECKS IF HELP IO IS RUN
     else if optHelp opts
     then helpIO
 
+    --CHECKS IF TEST IO IS RUN
     else if optTest opts
     then do testIO
 
-    else if optShow opts
-    then do 
-        x <- readFile $ head args 
-        showIO x
+    else if optMove opts /= ""
+    then do moveIO (optMove opts) file
+        --moveIO optMove
+
+
+    -- else if optShow opts
+    -- then do 
+    --     x <- readFile $ head args 
+    --     showIO x
     
     else if optVerbose opts
     then do
@@ -117,14 +124,13 @@ main = do
         writeGame boar "output.txt"
         -- putStrLn "test"
         -- putStrLn "nothing yet"
+
+    -- special cases control flow
     
     else case args of 
         [x] -> defaultIO x
-        (x:xs) -> putStrLn "too many args!"
-        _ ->  if optWin opts
-            then putStrLn $ "print a winner" ++ (show $ optDepth opts)
-            else do
-                error "No matching args were given"
+        (x:xs) -> helpIO
+        _ ->  noneIO
 
 helpIO :: IO()
 helpIO = putStrLn $ usageInfo usage options
@@ -134,12 +140,29 @@ testIO :: IO()
 testIO =
     runTests
 
-showIO :: String -> IO()
-showIO string =
-    putStrLn string
+moveIO :: String -> FilePath -> IO()
+moveIO str file =
+    do 
+        let [a,b] = splitOn "," str
+            (x,y) = ((read a) - 1, (read b) - 1)
+        (board, (player, place)) <- loadGame file
+        let z = makeMove board (x,y) (player, place) (if player == X then O else X)
+        case z of
+            Just z -> do putStrLn $ prettyBoard z
+            Nothing -> do ioError $ userError "move could not be made!"
+        -- prettyBoard $ makeMove board (x,y) (player, place) (if player == X then O else X)
+        -- return()
+    
 
 defaultIO :: String -> IO()
 defaultIO x =
     do 
         a <- loadGame x
         putStrLn $ prettyGame a
+
+noneIO :: IO()
+noneIO = 
+    putStrLn "jose: no command given (try --help)"
+
+extraIO =
+    putStrLn "unrecognized arguments were given"
