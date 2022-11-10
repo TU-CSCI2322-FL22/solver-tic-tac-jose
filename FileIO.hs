@@ -41,6 +41,7 @@ ioBoard board =
 -- needs to use case statements
 
 
+
 -- ^ actually goes through the structure and makes the list of strings
 showBoard::BBoard -> [String]
 showBoard board =
@@ -72,6 +73,9 @@ showBoard board =
                     | y == a = Just b
                     | otherwise = getSub y xs
 
+
+-- FOGARTY 5 FUNCTIONS
+
 readGame :: String -> Game
 readGame str =
     let a = lines str
@@ -92,7 +96,7 @@ readGame str =
     where
     gradeN :: Integer -> [String] -> BBoard
     gradeN n str =
-        let 
+        let
             second = [takeN 3 x | x <- str]
             third = [takeN 6 x | x <- str]
         in map (\(lst, cnt) -> (cnt, number 0 $ foldl1 (++) [take 3 x | x <- lst])) [(str, n), (second, n+1), (third, n+2)]
@@ -104,36 +108,19 @@ readGame str =
         | x == 'O' = (n,O) : number (n+1) xs
         | otherwise = number (n+1) xs
 
-a = "--------O\n---------\n---------\n---------\n----X----\n---------\n---------\n---------\n---------\nX\n4"
-c = lines "XXXOOOXXX\naXc456789\nxyz------\n"
+showGame :: Game -> String
+showGame (board,(symbol, num)) =
+    foldr1 (\a b -> a++"\n"++b) (showBoard board) ++ "\n" ++  show symbol ++ "\n" ++ show num
 
-writeGame::Game-> String -> IO()
-writeGame (board,(symbol, num)) file =
-    writeFile file (foldr1 (\a b -> a++"\n"++b) (showBoard board) ++ "\n" ++  show symbol ++ "\n" ++ show num)
+writeGame::Game-> FilePath -> IO()
+writeGame game file =
+    writeFile file $ showGame game
 
--- loadGame :: String -> IO (Maybe Game)
 loadGame :: FilePath -> IO Game
 loadGame file = do
     contents <- readFile file
-    -- let shunt = fileLoad contents
     return (readGame contents)
 
-fileLoad :: String -> Game
-fileLoad str =
-    -- let info = lines str
-    --     board = take 9 info
-    --     [loc, symbol] = [5,X]--info
-    --     outBoard = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
-    -- in (outBoard,(symbol, loc))
+putWinner::Game -> IO()
+putWinner game =
     undefined
-
-
-stripFront::[a]->Integer->[a]
-stripFront [] n = []
-stripFront lst 0 = lst
-stripFront (x:xs) n =
-    stripFront xs n
-
-loadInt file = do
-    contents <- readFile file
-    putStr contents
