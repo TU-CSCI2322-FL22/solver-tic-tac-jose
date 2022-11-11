@@ -20,8 +20,8 @@ import Data.List
 
 --case expression instead of guards
 --
-winner :: BBoard -> State
-winner board =
+winner :: Game -> State
+winner (board,_) =
     case littleWinner boardWinners of
         Just pl -> Done $ Win pl
         Nothing -> if tieCase board then Done Tie else Going
@@ -66,15 +66,15 @@ perfectMove board (a,b) player
 --if it isn't in the 0..8
 --that it's in legal
 
-makeMove :: BBoard -> Move -> Turn -> Player -> Maybe BBoard
-makeMove board (b,s) turn player =
+makeMove :: Game -> Move -> Maybe BBoard
+makeMove (board, (player, num)) (b,s) =
     case (a,j) of
         (True, False) -> Nothing -- already in the moves
         (False, False) -> Nothing -- invalid bounds
         (False, True) -> Just $ perfectMove board (b,s) player
         (True, True) -> Nothing
     where
-        options = legalMoves board turn
+        options = legalMoves board (player, num)
         a = b < 0 || s < 0 || b > 8 || s > 8 -- we want to be false
         j = (b,s) `elem` options -- we want to be true
         
@@ -101,7 +101,9 @@ listTurn turn board = map (makeTurn (fst turn)) (validLBoard board)
 lMoveHelper:: a -> b -> (a,b)
 lMoveHelper a b = (a,b)
 
-legalMoves :: BBoard -> Turn -> [Move]
+-- legalMoves :: BBoard -> Turn -> [Move]
+-- legalMoves :: Game -> [Move]
+-- legalMoves (board, turn)
 legalMoves board turn
             | not ((snd turn) `elem` (validLBoard board)) = concat (map (legalMoves board) (listTurn turn board))
             | not ((snd turn) `elem` [fst a | a<-board]) = map (lMoveHelper (snd turn)) [0..8] 

@@ -16,6 +16,7 @@ import GHC.Base (undefined)
 import Data.List (replicate)
 import Data.Maybe (Maybe(Nothing))
 import Data.Bool (Bool(True))
+import PrettyIO
 import Solver
 
 -- when some are filled in feel free to comment ot tests here
@@ -39,6 +40,9 @@ bigTie = [(z,miniTie) | z <- [0..8]]
 singleXTie = [(z,miniTie) | z <- [0..7]] ++ [(8,[(0,X),(4,X),(8,X)])]
 singleBotRight = [(z,[(0,X)]) | z <- [0..8]]
 
+forceWinX =  ([(0,[(0,X),(1,X),(2,X)]),(4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(2,X),(8,X)])] ++ [(x,[(0,O),(1,O),(2,O)]) | x <- [1,2,3,5,6,7]],(X,8))
+
+
 milestoneOne =
     do
         describe "Printing gamestate" $ do -- SHOW FUNCTION TESTING
@@ -56,23 +60,23 @@ milestoneOne =
                 showBoard [(4,[(4,X)])] `shouldBe` replicate 4 "---------" ++ ("----X----" : replicate 4 "---------" )
         describe "Winner of game" $ do -- WINNER TESTING
             it "empty board" $ do
-                winner [] `shouldBe` Going
+                winner ([],(X,4)) `shouldBe` Going
             it "Full game of X's" $ do
-                winner testBoardX `shouldBe` Done (Win X)
+                winner (testBoardX,(X,4)) `shouldBe` Done (Win X)
             it "Full game of X's" $ do
-                winner testBoardO `shouldBe` Done (Win O)
+                winner (testBoardO,(X,4)) `shouldBe` Done (Win O)
             it "Top left X win" $ do
-                winner testBoardTLX `shouldBe` Going
+                winner (testBoardTLX,(X,4)) `shouldBe` Going
             it "Diagonal Left Right" $ do
-                winner [(0,[(0,X),(4,X),(8,X)]),(4,[(0,X),(4,X),(8,X)]),(8,[(0,X),(4,X),(8,X)])] `shouldBe` Done (Win X)
+                winner ([(0,[(0,X),(4,X),(8,X)]),(4,[(0,X),(4,X),(8,X)]),(8,[(0,X),(4,X),(8,X)])],(X,4)) `shouldBe` Done (Win X)
             it "Going one X every spot" $ do
-                winner [(z,[(0,X)]) | z <- [0..8]] `shouldBe` Going
+                winner ([(z,[(0,X)]) | z <- [0..8]],(X,4)) `shouldBe` Going
             it "Tie every board tie" $ do
-                winner [(z,miniTie) | z <- [0..8]] `shouldBe` Done Tie
+                winner ([(z,miniTie) | z <- [0..8]],(X,4)) `shouldBe` Done Tie
             it "Tie every tie except one" $ do
-                winner ([(z,miniTie) | z <- [0..7]] ++ [(8,[(0,X),(4,X),(8,X)])]) `shouldBe` Done Tie
+                winner (([(z,miniTie) | z <- [0..7]] ++ [(8,[(0,X),(4,X),(8,X)])]),(X,4)) `shouldBe` Done Tie
             it "Going every tie except one empty" $ do
-                winner ([(z,miniTie) | z <- [0..7]]) `shouldBe` Going
+                winner (([(z,miniTie) | z <- [0..7]]),(X,4)) `shouldBe` Going
         describe "Legal moves" $ do
             it "Full board of X's" $ do
                 legalMoves testBoardX (X,0)  `shouldBe` []
@@ -85,13 +89,13 @@ milestoneOne =
                 
         describe "Make move" $ do
             it "empty X top left" $ do
-                makeMove [] (0,0) (O,0) X `shouldBe` Just [(0,[(0,X)])]
+                makeMove ([],(X,0)) (0,0) `shouldBe` Just [(0,[(0,X)])]
             it "empty O bottom right" $ do
-                makeMove [] (8,8) (X,8) O `shouldBe` Just [(8,[(8,O)])]
+                makeMove ([],(O,8)) (8,8) `shouldBe` Just [(8,[(8,O)])]
             it "full board" $ do
-                makeMove testBoardX (4,4) (O,4) X `shouldBe` Nothing
+                makeMove (testBoardX,(X,4)) (4,4) `shouldBe` Nothing
             it "incorrect space" $ do
-                makeMove [] (8,8) (O,0) X `shouldBe` Nothing
+                makeMove ([],(X,0)) (8,8) `shouldBe` Nothing
 
 milestoneTwo = 
     do
@@ -104,11 +108,13 @@ milestoneTwo =
                 readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldBe` (testBoardX,(O,8))
             it "full board shouldn't be empty" $ do
                 readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldNotBe` ([],(O,8))
-        describe "Who Wins" $ do
-            it "diagonal of x's on x's turn" $ do
-                whoWins ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(O,8)) `shouldBe` Win X
-            it "diagonal of O's on O's turn" $ do
-                whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` Win X
+        -- describe "Who Wins" $ do
+        --     it "diagonal of X's on X's turn" $ do
+        --         whoWins ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(O,8)) `shouldBe` Win X
+        --     it "horizontal of X's on X's turn" $ do
+        --         whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(O,8)) `shouldBe` Win X
+        --     it "diagonal of X's with forced win for X" $ do
+        --         whoWins forceWinX  `shouldBe` Win X
 
 runTests :: IO()
 runTests =   
