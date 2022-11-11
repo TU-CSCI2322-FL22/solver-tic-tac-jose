@@ -106,3 +106,7 @@ legalMoves board turn
             | not ((snd turn) `elem` (validLBoard board)) = concat (map (legalMoves board) (listTurn turn board))
             | not ((snd turn) `elem` [fst a | a<-board]) = map (lMoveHelper (snd turn)) [0..8] 
             | otherwise = map (lMoveHelper (snd turn)) ([0..8]\\[fst b | b<-snd (head [ a | a <- board, fst a == snd turn])])
+
+-- milestone 2 who will win function
+whoWinner :: Game -> Outcome
+whoWinner = undefined
