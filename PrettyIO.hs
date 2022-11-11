@@ -32,6 +32,8 @@ prettyBoard board =
         pipeVert::[String] -> [String]
         pipeVert lst =
             let marker = replicate 15 '='
+                --  = "====" ++ " " ++ "=====" ++ " " ++ "===="
+                --replicate 15 '='
             in take 3 lst ++ [marker] ++ take 3 (takeN 3 lst) ++ [marker] ++ takeN 6 lst
 
 ioGame :: Game -> IO ()
