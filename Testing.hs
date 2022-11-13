@@ -79,7 +79,7 @@ milestoneOne =
                 winner (([(z,miniTie) | z <- [0..7]]),(X,4)) `shouldBe` Going
         describe "Legal moves" $ do
             it "Full board of X's" $ do
-                legalMoves (testBoardX,(X,0))  `shouldBe` []
+                legalMoves (testBoardXmak,(X,0))  `shouldBe` []
             it "Empty board unrestrained" $ do
                 legalMoves ([],(X,9))  `shouldBe` [(x,y) | x <- [0..8], y <- [0..8]]
             it "Empty board top left" $ do
@@ -108,13 +108,14 @@ milestoneTwo =
                 readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldBe` (testBoardX,(O,8))
             it "full board shouldn't be empty" $ do
                 readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldNotBe` ([],(O,8))
-        -- describe "Who Wins" $ do
-        --     it "diagonal of X's on X's turn" $ do
-        --         whoWins ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(O,8)) `shouldBe` Win X
-        --     it "horizontal of X's on X's turn" $ do
-        --         whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(O,8)) `shouldBe` Win X
-        --     it "diagonal of X's with forced win for X" $ do
-        --         whoWins forceWinX  `shouldBe` Win X
+        describe "Who Wins" $ do
+            it "diagonal of X's on X's turn" $ do
+                whoWins ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` Win X
+            it "horizontal of X's on X's turn" $ do
+                whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` Win X
+            it "diagonal of X's with forced win for X" $ do
+                whoWins forceWinX  `shouldBe` Win X
+            
 
 runTests :: IO()
 runTests =   
