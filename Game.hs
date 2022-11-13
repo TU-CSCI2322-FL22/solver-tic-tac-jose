@@ -74,7 +74,7 @@ makeMove (board, (player, num)) (b,s) =
         (False, True) -> Just $ perfectMove board (b,s) player
         (True, True) -> Nothing
     where
-        options = legalMoves board (player, num)
+        options = legalMoves (board, (player, num))
         a = b < 0 || s < 0 || b > 8 || s > 8 -- we want to be false
         j = (b,s) `elem` options -- we want to be true
         
@@ -102,9 +102,9 @@ lMoveHelper:: a -> b -> (a,b)
 lMoveHelper a b = (a,b)
 
 -- legalMoves :: BBoard -> Turn -> [Move]
--- legalMoves :: Game -> [Move]
--- legalMoves (board, turn)
-legalMoves board turn
-            | not ((snd turn) `elem` (validLBoard board)) = concat (map (legalMoves board) (listTurn turn board))
+legalMoves :: Game -> [Move]
+-- legalMoves (bboard, turn)
+legalMoves (board,turn)
+            | not ((snd turn) `elem` (validLBoard board)) = concat (map (legalMoves) [(board, x)|x<-(listTurn turn board)])
             | not ((snd turn) `elem` [fst a | a<-board]) = map (lMoveHelper (snd turn)) [0..8] 
             | otherwise = map (lMoveHelper (snd turn)) ([0..8]\\[fst b | b<-snd (head [ a | a <- board, fst a == snd turn])])
