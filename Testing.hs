@@ -121,8 +121,14 @@ milestoneTwo =
                 whoWins ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` Win X
             it "diagonal of X's with forced win for X" $ do
                 whoWins forceWinX  `shouldBe` Win X
+            it "top left tie" $ do
+                whoWins ([(0,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]),(6,[(0,X),(1,X),(2,X)]),(7,[(0,X),(2,X),(6,X),(8,X)]), (8,[(0,X),(2,X),(6,X),(8,X)])],(X,8)) `shouldBe` Win X
             it "force game middle" $ do
                 whoWins (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldBe` Win X
+            it "three corners" $ do
+                whoWins (fillBoardDiagonalX ++ [(8,[(0,X),(2,X),(8,X)])], (X,8)) `shouldBe` Win X
+            it "x corner start" $ do
+                whoWins (fillBoardDiagonalX ++ [(8,[(0,X),(7,O)])], (X,8)) `shouldBe` Win X
         describe "Best Move" $ do
             it "diagonal of X's on X's turn" $ do
                 bestMove ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` (8,8)
@@ -132,6 +138,8 @@ milestoneTwo =
                 bestMove ([(0,[(0,X),(1,X),(2,X)]),(1,[(0,X),(1,X),(2,X)]),(2,[(0,X),(1,X)])],(X,2)) `shouldBe` (2,2)
             it "vertical of X's on X's turn" $ do
                 bestMove ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` (6,2)
+            it "top left tie" $ do
+                bestMove ([(0,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]),(6,[(0,X),(1,X),(2,X)]),(7,[(0,X),(2,X),(6,X),(8,X)]), (8,[(0,X),(2,X),(6,X),(8,X)])],(X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,3),(8,4),(8,5),(8,7)])
             it "three corners" $ do
                 bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(2,X),(8,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,5)])
             it "x corner start" $ do
