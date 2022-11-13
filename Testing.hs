@@ -121,6 +121,8 @@ milestoneTwo =
                 whoWins ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` Win X
             it "diagonal of X's with forced win for X" $ do
                 whoWins forceWinX  `shouldBe` Win X
+            it "force game middle" $ do
+                whoWins (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldBe` Win X
         describe "Best Move" $ do
             it "diagonal of X's on X's turn" $ do
                 bestMove ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` (8,8)

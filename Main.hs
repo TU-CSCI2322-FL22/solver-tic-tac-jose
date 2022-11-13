@@ -14,7 +14,7 @@ import Data.Bool (Bool(False))
 import Game
 import FileIO
 import FileIO (loadGame)
-import PrettyIO (prettyGame, prettyBoard)
+import PrettyIO
 import GHC.IO.Exception (userError)
 -- import Data.ByteString (putStrLn)
 import Data.List.Split
@@ -98,6 +98,9 @@ main = do
     else if optPrint opts /= ""
     then do printIO (optPrint opts)
 
+    else if optWin opts
+    then do winIO file
+
     --CHECKS FOR MOVE IO -- THEN MAKES THE MOVE
     else if optMove opts /= ""
     then do moveIO (optMove opts) file
@@ -133,7 +136,11 @@ moveIO str file =
             Just z -> do putStrLn $ prettyBoard z
             Nothing -> do ioError $ userError "move could not be made!"
 
-    
+winIO :: FilePath -> IO()
+winIO file =
+    do
+        game <- loadGame file
+        ioGame game
 
 defaultIO :: String -> IO()
 defaultIO x =
