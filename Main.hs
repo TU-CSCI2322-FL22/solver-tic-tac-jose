@@ -14,10 +14,11 @@ import Data.Bool (Bool(False))
 import Game
 import FileIO
 import FileIO (loadGame)
-import PrettyIO (prettyGame, prettyBoard)
+import PrettyIO
 import GHC.IO.Exception (userError)
 -- import Data.ByteString (putStrLn)
 import Data.List.Split
+import Solver (bestMove)
 
 -- https://downloads.haskell.org/~ghc/4.06/docs/hslibs/sec-getopt.html
 
@@ -78,7 +79,7 @@ main = do
     (opts, errs) <- if null args || ((head . head) args == '-') then compilerOpts args else compilerOpts $ tail args
     
     --SNAGS FILE STRING
-    let file = if (head . head) args == '-' then "" else (head args)
+    let file = if null args || null (head args) then "" else (if (head . head) args == '-' then "" else (head args))
 
     --SEARCHES FOR ERRORS
     if not (null errs)
@@ -98,10 +99,16 @@ main = do
     else if optPrint opts /= ""
     then do printIO (optPrint opts)
 
+    else if optWin opts
+    then do winIO file
+
     --CHECKS FOR MOVE IO -- THEN MAKES THE MOVE
     else if optMove opts /= ""
     then do moveIO (optMove opts) file
     
+    else if file /= ""
+    then do winIO file
+
     else case args of 
         [x] -> defaultIO x
         (x:xs) -> helpIO
@@ -133,7 +140,11 @@ moveIO str file =
             Just z -> do putStrLn $ prettyBoard z
             Nothing -> do ioError $ userError "move could not be made!"
 
-    
+winIO :: FilePath -> IO()
+winIO file =
+    do
+        game <- loadGame file
+        print $ bestMove game
 
 defaultIO :: String -> IO()
 defaultIO x =
