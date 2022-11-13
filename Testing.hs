@@ -131,7 +131,7 @@ milestoneTwo =
             it "vertical of X's on X's turn" $ do
                 bestMove ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` (6,2)
             it "force game middle" $ do
-                fillBoardDiagonalX ++ 
+                bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,2),(8,6)])
 
 runTests :: IO()
 runTests =   
