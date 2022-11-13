@@ -18,6 +18,7 @@ import Data.Maybe (Maybe(Nothing))
 import Data.Bool (Bool(True))
 import PrettyIO
 import Solver
+import Solver (bestMove)
 
 -- when some are filled in feel free to comment ot tests here
 testBoardOne = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
@@ -42,6 +43,7 @@ singleBotRight = [(z,[(0,X)]) | z <- [0..8]]
 
 forceWinX =  ([(0,[(0,X),(1,X),(2,X)]),(4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(2,X),(8,X)])] ++ [(x,[(0,O),(1,O),(2,O)]) | x <- [1,2,3,5,6,7]],(X,8))
 
+fillBoardDiagonalX = [(0,[(0,X),(1,X),(2,X)]),(4,[(0,X),(1,X),(2,X)])] ++ [(x,[(0,O),(1,O),(2,O)]) | x <- [1,2,3,5,6,7]]
 
 milestoneOne =
     do
@@ -79,7 +81,7 @@ milestoneOne =
                 winner (([(z,miniTie) | z <- [0..7]]),(X,4)) `shouldBe` Going
         describe "Legal moves" $ do
             it "Full board of X's" $ do
-                legalMoves (testBoardXmak,(X,0))  `shouldBe` []
+                legalMoves (testBoardX,(X,0))  `shouldBe` []
             it "Empty board unrestrained" $ do
                 legalMoves ([],(X,9))  `shouldBe` [(x,y) | x <- [0..8], y <- [0..8]]
             it "Empty board top left" $ do
@@ -113,9 +115,23 @@ milestoneTwo =
                 whoWins ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` Win X
             it "horizontal of X's on X's turn" $ do
                 whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` Win X
+            it "horizontal of X's on X's turn" $ do
+                whoWins ([(0,[(0,X),(1,X),(2,X)]),(1,[(0,X),(1,X),(2,X)]),(2,[(0,X),(1,X)])],(X,2)) `shouldBe` Win X
+            it "vertical of X's on X's turn" $ do
+                whoWins ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` Win X
             it "diagonal of X's with forced win for X" $ do
                 whoWins forceWinX  `shouldBe` Win X
-            
+        describe "Best Move" $ do
+            it "diagonal of X's on X's turn" $ do
+                bestMove ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` (8,8)
+            it "horizontal of X's on X's turn" $ do
+                bestMove ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` (8,2)
+            it "horizontal of X's on X's turn" $ do
+                bestMove ([(0,[(0,X),(1,X),(2,X)]),(1,[(0,X),(1,X),(2,X)]),(2,[(0,X),(1,X)])],(X,2)) `shouldBe` (2,2)
+            it "vertical of X's on X's turn" $ do
+                bestMove ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` (6,2)
+            it "force game middle" $ do
+                fillBoardDiagonalX ++ 
 
 runTests :: IO()
 runTests =   
