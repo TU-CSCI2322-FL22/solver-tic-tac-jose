@@ -119,7 +119,7 @@ printIO :: String -> IO()
 printIO str =
     do
         a <- loadGame str
-        putStrLn $ prettyGame a
+        putStrLn $ prettyGame a 
 
 
 moveIO :: String -> FilePath -> IO()
