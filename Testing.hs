@@ -134,7 +134,7 @@ milestoneTwo =
             it "always lose" $ do
                 whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(6,X),(8,X)])],(O,8)) `shouldBe` Win X
             it "always lose v2" $ do
-                whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(6,X),(8,X)])],(O,8)) `shouldBe` Win X
+                whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(2,X),(8,X)])],(O,8)) `shouldBe` Win X
 
         describe "Best Move" $ do
             it "diagonal of X's on X's turn" $ do
