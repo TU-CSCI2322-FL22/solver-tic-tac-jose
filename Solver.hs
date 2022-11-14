@@ -25,24 +25,31 @@ whoWins gameState@(board, (player, req)) =
                      valGames = catMaybes (map (\m -> makeMove gameState m) valMoves)
                     in curOutcome player (map whoWins valGames)
 
-lambX (a,c) (b,d) =
-    case (a,b) of 
-        (Win X, _) -> (Win X, c)
-        (_, Win X) -> (Win X, d)
-        (_, Tie) -> (Tie, d)
-        _ -> (Win O, c)
+-- lambX symbol (a,c) (b,d) =
+--     case (a,b) of 
+--         (Win X, _) -> (Win X, c)
+--         (_, Win X) -> (Win X, d)
+--         (_, Tie) -> (Tie, d)
+--         _ -> (Win O, c)
 
-lambO (a,c) (b,d) =
+lambO symbol (a,c) (b,d) =
     case (a,b) of 
-        (Win O, _) -> (Win O, c)
-        (_, Win O) -> (Win O, d)
-        (_, Tie) -> (Tie, d)
-        _ -> (Win X, c)
+        (Win symbol, _) -> (Win symbol, c)
+        (_, Win symbol) -> (Win symbol, d)
+        (Tie, Tie) -> (Tie, d)
+        (Win other, Tie) -> (Tie, d)
+        _ -> (Win other, c)
+    where
+        other = getOtherP symbol
 
 -- Then write a function "best move" that takes a Game and return the best Move.
 bestMove :: Game -> Move
 bestMove game =
-        let 
+    case null z of
+        True -> snd shut
+        False -> snd $ head z
+
+    where 
         player = fst $ snd game
         moves = legalMoves game
 
@@ -56,8 +63,9 @@ bestMove game =
 
         la = map (\(a,b) -> (whoWins a, b)) sub
         
-        shut = if player == O then foldl1 lambO la else foldl1 lambX la
+        shut = foldr1 (lambO player) la
+            -- if player == O then foldl1 lambO la else foldl1 lambX la
 
-    in if null z then snd shut else snd $ head z
+    -- in if null z then snd shut else snd $ head z
 
 

@@ -129,7 +129,9 @@ milestoneTwo =
                 whoWins (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldBe` Win X
             it "win deep" $ do
                 whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(8,X)])] ++  [(8,[(0,X),(4,O),(8,X)])],(X,8)) `shouldBe` Win X
-            
+            it "always lose" $ do
+                whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(2,X),(8,X)])],(O,8)) `shouldBe` Win X
+
         describe "Best Move" $ do
             it "diagonal of X's on X's turn" $ do
                 bestMove ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` (8,8)
@@ -149,7 +151,8 @@ milestoneTwo =
                 bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,3),(8,4),(8,5),(8,6),(8,7)])
             it "win deep" $ do
                 bestMove (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(8,X)])] ++  [(8,[(0,X),(4,O),(8,X)])],(X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,3),(8,5),(8,6),(8,7)]) 
-            
+            it "always lose" $ do
+                bestMove (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(2,X),(8,X)])],(O,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,3),(8,4),(8,5),(8,6),(8,7)])
 
 runTests :: IO()
 runTests =   
