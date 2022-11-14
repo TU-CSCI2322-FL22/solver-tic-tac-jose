@@ -36,8 +36,9 @@ winner (board,_) =
         tieCase :: BBoard -> Bool
         tieCase board
             | length board /= 9 = False
-            | otherwise = not $ null [x | x <- winners, length x == 9]
+            | otherwise = all (==True) lst--not $ null [x | x <- winners, length x == 9]
             where 
+                lst = [littleWinner b /= Nothing || length b == 9 | (_,b) <- board]
                 winners = [b | (_,b) <- board, littleWinner b == Nothing]
 
 
@@ -70,7 +71,7 @@ oppP p
         | p == X = O
         | p == O = X
 
--- makeMove :: Game -> Move -> Maybe State
+makeMove :: Game -> Move -> Maybe Game
 makeMove (board, (player, num)) (b,s) =
     case (a,j) of
         (True, False) -> Nothing -- already in the moves

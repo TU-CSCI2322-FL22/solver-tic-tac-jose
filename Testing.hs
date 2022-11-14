@@ -81,6 +81,8 @@ milestoneOne =
                 winner (([(z,miniTie) | z <- [0..7]] ++ [(8,[(0,X),(4,X),(8,X)])]),(X,4)) `shouldBe` Done Tie
             it "Going every tie except one empty" $ do
                 winner (([(z,miniTie) | z <- [0..7]]),(X,4)) `shouldBe` Going
+            it "Shouldn't be a tie" $ do
+                winner (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(2,X),(8,X)])],(O,8)) `shouldBe` Going
         describe "Legal moves" $ do
             it "Full board of X's" $ do
                 legalMoves (testBoardX,(X,0))  `shouldBe` []
