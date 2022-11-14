@@ -8,7 +8,7 @@ import Data.Maybe
 import System.Console.GetOpt
 
 import Board
-import Testing (runTests)
+-- import Testing (runTests)
 import GHC.Base (undefined)
 import Data.Bool (Bool(False))
 import Game
@@ -24,7 +24,6 @@ import Solver (bestMove)
 
 data Options = Options {
     optHelp              :: Bool
-  , optTest              :: Bool
   , optWin               :: Bool
   , optDepth             :: Integer
   , optMove              :: String
@@ -36,7 +35,6 @@ data Options = Options {
 defaultOptions :: Options
 defaultOptions = Options {
      optHelp = False
-   , optTest = False
    , optWin = False
    , optDepth = 0
    , optMove = ""
@@ -48,7 +46,6 @@ defaultOptions = Options {
 options :: [OptDescr (Options -> Options)]
 options = [
     Option ['h'] ["help"] (NoArg (\opts -> opts { optHelp = True})) "Print a help message and exit.",
-    Option ['t'] ["test"] (NoArg (\opts -> opts { optTest = True})) "Runs a series of tests on your code",
     Option ['w'] ["winner"] (NoArg (\opts -> opts {optWin = True})) "Prints the best move",
 
     Option ['d'] ["depth"] (ReqArg (\depth opts -> opts { optDepth = read depth }) "N") "cutoff depth",
@@ -93,8 +90,8 @@ main = do
     then helpIO
 
     --CHECKS IF TEST IO IS RUN
-    else if optTest opts
-    then do testIO
+    -- else if optTest opts
+    -- then do testIO
 
     else if optPrint opts /= ""
     then do printIO (optPrint opts)
@@ -117,10 +114,6 @@ main = do
 helpIO :: IO()
 helpIO = putStrLn $ usageInfo usage options
     where usage = "Usage: classifier [OPTION...]"
-
-testIO :: IO()
-testIO =
-    runTests
 
 printIO :: String -> IO()
 printIO str =
