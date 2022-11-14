@@ -10,16 +10,16 @@ import Data.Maybe
 -- Considers every valid move, the resulting game state, and chooses the move with the best outcome for the current player. Think Scavenge!
 getOtherP::Player->Player
 getOtherP p
-        | p == X = O
-        | p == O = X
+    | p == X = O
+    | p == O = X
+    | otherwise = error "this shouldn't exist"
 
 compress :: [Outcome] -> Outcome
 compress lst
     | Win X `elem` lst = Win X
     | Win O `elem` lst = Win O
     | Tie `elem` lst = Tie
-    | null lst = Tie
-    -- | otherwise = Going
+    | otherwise = Tie
 
 -- Write  a function "who will win" that takes a Game and returns an Outcome. 
 whoWins :: Game -> Outcome
@@ -64,8 +64,7 @@ bestMove game =
         sub = [((perfectMove (fst game) (a,b) player, (other, a)),(a,b)) | (a,b) <- moves]
 
         alt = [(winner a, b) | (a,b) <- sub]
-        v = Done (Win player)
-        z = filter (\(a,b) -> a == v) alt
+        z = filter (\(a,b) -> a == Done (Win player)) alt
 
         la = map (\(a,b) -> (whoWins a, b)) sub
         
