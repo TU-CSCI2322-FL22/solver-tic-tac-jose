@@ -91,15 +91,15 @@ milestoneOne =
             it "Top left full" $ do
                 legalMoves ([(0,[(z,X) | z <- [0..8]])],(X,0)) `shouldBe` [(x,y) | x <- [1..8], y <- [0..8]]
                 
-        describe "Make move" $ do
-            it "empty X top left" $ do
-                makeMove ([],(X,0)) (0,0) `shouldBe` Just [(0,[(0,X)])]
-            it "empty O bottom right" $ do
-                makeMove ([],(O,8)) (8,8) `shouldBe` Just [(8,[(8,O)])]
-            it "full board" $ do
-                makeMove (testBoardX,(X,4)) (4,4) `shouldBe` Nothing
-            it "incorrect space" $ do
-                makeMove ([],(X,0)) (8,8) `shouldBe` Nothing
+        -- describe "Make move" $ do
+        --     it "empty X top left" $ do
+        --         makeMove ([],(X,0)) (0,0) `shouldBe` Just [(0,[(0,X)])]
+        --     it "empty O bottom right" $ do
+        --         makeMove ([],(O,8)) (8,8) `shouldBe` Just [(8,[(8,O)])]
+        --     it "full board" $ do
+        --         makeMove (testBoardX,(X,4)) (4,4) `shouldBe` Nothing
+        --     it "incorrect space" $ do
+        --         makeMove ([],(X,0)) (8,8) `shouldBe` Nothing
 
 milestoneTwo = 
     do

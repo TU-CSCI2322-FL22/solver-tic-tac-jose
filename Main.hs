@@ -125,13 +125,14 @@ printIO str =
 moveIO :: String -> FilePath -> IO()
 moveIO str file =
     do 
-        let [a,b] = splitOn "," str
-            (x,y) = ((read a) - 1, (read b) - 1)
-        (board, (player, place)) <- loadGame file
-        let z = makeMove (board, ( (if player == X then O else X),place)) (x,y)
-        case z of
-            Just z -> do putStrLn $ prettyBoard z
-            Nothing -> do ioError $ userError "move could not be made!"
+        putStrLn "yoink"
+        -- let [a,b] = splitOn "," str
+        --     (x,y) = ((read a) - 1, (read b) - 1)
+        -- (board, (player, place)) <- loadGame file
+        -- let z = makeMove (board, ( (if player == X then O else X),place)) (x,y)
+        -- case z of
+        --     Just z -> do putStrLn $ prettyBoard z
+        --     Nothing -> do ioError $ userError "move could not be made!"
 
 winIO :: FilePath -> IO()
 winIO file =

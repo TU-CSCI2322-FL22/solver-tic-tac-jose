@@ -65,13 +65,17 @@ perfectMove board (a,b) player
 --filtering
 --if it isn't in the 0..8
 --that it's in legal
+oppP::Player->Player
+oppP p
+        | p == X = O
+        | p == O = X
 
-makeMove :: Game -> Move -> Maybe BBoard
+-- makeMove :: Game -> Move -> Maybe State
 makeMove (board, (player, num)) (b,s) =
     case (a,j) of
         (True, False) -> Nothing -- already in the moves
         (False, False) -> Nothing -- invalid bounds
-        (False, True) -> Just $ perfectMove board (b,s) player
+        (False, True) -> Just $ (perfectMove board (b,s) player, (oppP player, s))
         (True, True) -> Nothing
     where
         options = legalMoves (board, (player, num))
