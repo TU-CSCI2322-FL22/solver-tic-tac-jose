@@ -22,7 +22,7 @@ bench (board, turn)
                           nBoards = catMaybes [makeMove (board,turn) m | m<-vMoves]
                           vMoves = legalMoves (board,turn)
 whoWins :: Game -> Outcome
-whoWins game =
+whoWins game 
         | bench game > 0 = Win X
         | bench game < 0 = Win O
         | otherwise = Tie
