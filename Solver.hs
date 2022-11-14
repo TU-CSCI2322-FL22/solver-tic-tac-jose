@@ -57,9 +57,15 @@ bestMove game =
     let 
         player = fst $ snd game
         moves = legalMoves game
+
         other = getOtherP player
+
         sub :: [(Game, Move)]
         sub = [((perfectMove (fst game) (a,b) player, (other, a)),(a,b)) | (a,b) <- moves]
+
+        alt = [(winner a, b) | (a,b) <- sub]
+        v = Done (Win player)
+        z = filter (\(a,b) -> a == v) alt
 
         la = map (\(a,b) -> (whoWins a, b)) sub
         
@@ -67,6 +73,6 @@ bestMove game =
 
         -- post = (perfectMove (fst) Move Player)
         -- possible = map (\(a,b) -> (whoWins a, a)) 
-    in snd shut
+    in if null z then snd shut else snd $ head z
 
 
