@@ -126,7 +126,7 @@ milestoneTwo =
             it "diagonal of X's with forced win for X" $ do
                 whoWins forceWinX  `shouldBe` Win X
             it "top left tie" $ do
-                whoWins ([(0,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]),(6,[(0,X),(1,X),(2,X)]),(7,[(0,X),(2,X),(6,X),(8,X)]), (8,[(0,X),(2,X),(6,X),(8,X)])],(X,8)) `shouldBe` Win X
+                whoWins ([(x,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]) | x <- [0..5]] ++ [(6,[(0,X),(1,X),(2,X)]),(7,[(0,X),(2,X),(6,X),(8,X)]), (8,[(0,X),(2,X),(6,X),(8,X)])],(X,8)) `shouldBe` Win X
             it "force game middle" $ do
                 whoWins (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldBe` Win X
             it "win deep" $ do
@@ -135,6 +135,8 @@ milestoneTwo =
                 whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(6,X),(8,X)])],(O,8)) `shouldBe` Win X
             it "always lose v2" $ do
                 whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(2,X),(8,X)])],(O,8)) `shouldBe` Win X
+            it "always lose win O" $ do
+                whoWins (tieTop ++ [(6,[(0,O),(1,O),(2,O)])] ++ [(7,[(0,O),(1,O),(2,O),(8,O)])] ++  [(8,[(0,O),(2,O),(8,O)])],(X,8)) `shouldBe` Win O
 
         describe "Best Move" $ do
             it "diagonal of X's on X's turn" $ do
