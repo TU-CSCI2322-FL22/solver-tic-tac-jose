@@ -70,8 +70,6 @@ bestMove game =
         
         shut = if player == O then foldl1 lambO la else foldl1 lambX la
 
-        -- post = (perfectMove (fst) Move Player)
-        -- possible = map (\(a,b) -> (whoWins a, a)) 
     in if null z then snd shut else snd $ head z
 
 
