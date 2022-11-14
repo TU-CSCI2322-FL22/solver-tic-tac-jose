@@ -16,7 +16,8 @@ curOutcome :: Player -> [Outcome] -> Outcome
 curOutcome player winners | Win player `elem` winners = Win player
                           | Tie `elem` winners = Tie
                           | player == X = Win O
-                          | otherwise = Win X
+                        --   | player == O = Win X
+                          | otherwise = Win X --error "yo this didn't work bro"
 whoWins :: Game -> Outcome
 whoWins gameState@(board, (player, req)) =
     case winner gameState of 
@@ -24,6 +25,14 @@ whoWins gameState@(board, (player, req)) =
         Going -> let valMoves = legalMoves gameState
                      valGames = catMaybes (map (\m -> makeMove gameState m) valMoves)
                     in curOutcome player (map whoWins valGames)
+
+-- whoWon :: Game -> Outcome
+whoWon gameState@(board, (player, req)) =
+    case winner gameState of 
+        -- Done result -> result
+        Going -> let valMoves = legalMoves gameState
+                     in catMaybes (map (\m -> makeMove gameState m) valMoves)
+                    -- in WicurOutcome player (map whoWins valGames)
 
 -- lambX symbol (a,c) (b,d) =
 --     case (a,b) of 
