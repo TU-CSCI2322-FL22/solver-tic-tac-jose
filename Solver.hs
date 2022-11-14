@@ -13,21 +13,12 @@ getOtherP p
         | p == X = O
         | p == O = X
 
-bench :: Game -> Integer
-bench (board, turn)
-                | winner (board,turn) == Done (Win X) = 1
-                | winner (board,turn) == Done (Win O) = -1
-                | winner (board,turn) == Done Tie = 0
-                | otherwise = sum [bench nGame | nGame <- newGames]
-                    where newGames = [(nBoard, ((getOtherP) (fst turn), fst m)) | nBoard<-nBoards, m <- vMoves]
-                          nBoards = catMaybes [makeMove (board,turn) m | m<-vMoves]
-                          vMoves = legalMoves (board,turn)
-
 compress :: [Outcome] -> Outcome
 compress lst
     | Win X `elem` lst = Win X
     | Win O `elem` lst = Win O
     | Tie `elem` lst = Tie
+    | null lst = Tie
     -- | otherwise = Going
 
 -- Write  a function "who will win" that takes a Game and returns an Outcome. 
@@ -41,24 +32,41 @@ whoWins game =
     where
         moves = legalMoves game
         other = getOtherP (fst $ snd game)
-        -- newGames = catMaybes $ map (makeMove game) moves
         getGame = [(perfectMove (fst game) (a,b) (fst $ snd game), (other, a)) | (a,b) <- moves]
-        -- tru = [(a,b) | (a,b) <- getGame, a /= Nothing]
-        -- tru = mapMaybe (\(a,b) -> b) getGame
-        -- post = catMaybes getGame
         recur = map whoWins getGame
         fool = compress recur
-        
-        -- comp = compress newGames
 
 
-            -- | bench game > 0 = Win X
-            -- | bench game < 0 = Win O
-            -- | otherwise = Tie
+lambX (a,c) (b,d) =
+    case (a,b) of 
+        (Win X, _) -> (Win X, c)
+        (_, Win X) -> (Win X, d)
+        (_, Tie) -> (Tie, d)
+        _ -> (Win O, c)
+
+lambO (a,c) (b,d) =
+    case (a,b) of 
+        (Win O, _) -> (Win O, c)
+        (_, Win O) -> (Win O, d)
+        (_, Tie) -> (Tie, d)
+        _ -> (Win X, c)
 
 -- Then write a function "best move" that takes a Game and return the best Move.
 bestMove :: Game -> Move
 bestMove game =
-    undefined
+    let 
+        player = fst $ snd game
+        moves = legalMoves game
+        other = getOtherP player
+        sub :: [(Game, Move)]
+        sub = [((perfectMove (fst game) (a,b) player, (other, a)),(a,b)) | (a,b) <- moves]
+
+        la = map (\(a,b) -> (whoWins a, b)) sub
+        
+        shut = if player == O then foldl1 lambO la else foldl1 lambX la
+
+        -- post = (perfectMove (fst) Move Player)
+        -- possible = map (\(a,b) -> (whoWins a, a)) 
+    in snd shut
 
 
