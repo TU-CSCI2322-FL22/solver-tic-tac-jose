@@ -25,11 +25,39 @@ whoWins gameState@(board, (player, req)) =
                      valGames = catMaybes (map (\m -> makeMove gameState m) valMoves)
                     in curOutcome player (map whoWins valGames)
 
+lambX (a,c) (b,d) =
+    case (a,b) of 
+        (Win X, _) -> (Win X, c)
+        (_, Win X) -> (Win X, d)
+        (_, Tie) -> (Tie, d)
+        _ -> (Win O, c)
 
+lambO (a,c) (b,d) =
+    case (a,b) of 
+        (Win O, _) -> (Win O, c)
+        (_, Win O) -> (Win O, d)
+        (_, Tie) -> (Tie, d)
+        _ -> (Win X, c)
 
 -- Then write a function "best move" that takes a Game and return the best Move.
 bestMove :: Game -> Move
 bestMove game =
-    undefined
+        let 
+        player = fst $ snd game
+        moves = legalMoves game
+
+        other = getOtherP player
+
+        sub :: [(Game, Move)]
+        sub = [((perfectMove (fst game) (a,b) player, (other, a)),(a,b)) | (a,b) <- moves]
+
+        alt = [(winner a, b) | (a,b) <- sub]
+        z = filter (\(a,b) -> a == Done (Win player)) alt
+
+        la = map (\(a,b) -> (whoWins a, b)) sub
+        
+        shut = if player == O then foldl1 lambO la else foldl1 lambX la
+
+    in if null z then snd shut else snd $ head z
 
 
