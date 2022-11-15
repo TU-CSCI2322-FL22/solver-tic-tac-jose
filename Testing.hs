@@ -152,7 +152,7 @@ milestoneTwo =
             it "three corners" $ do
                 bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(2,X),(8,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,4),(8,5)])
             it "x corner start" $ do
-                bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(7,O)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,2),(8,2),(8,4),(8,6)])
+                bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(7,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,4),(8,6)])
             it "force game middle" $ do
                 bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,3),(8,4),(8,5),(8,6),(8,7)])
             it "win deep" $ do
