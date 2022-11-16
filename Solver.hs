@@ -84,7 +84,7 @@ lamb symbol (a,c) (b,d) =
 bestMove :: Game -> Move
 bestMove game =
     case null z of
-        True -> shut
+        True -> snd shut
         False -> snd $ head z
 
     where 
