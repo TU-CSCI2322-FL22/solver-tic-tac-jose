@@ -86,23 +86,17 @@ bestMove game =
     case null z of
         True -> snd shut
         False -> snd $ head z
-
-    where 
-        player = fst $ snd game
-        moves = legalMoves game
-
-        other = getOtherP player
-
-        sub :: [(Game, Move)]
-        sub = [((perfectMove (fst game) (a,b) player, (other, a)),(a,b)) | (a,b) <- moves]
-
-        alt = [(winner a, b) | (a,b) <- sub]
+    where
         z = filter (\(a,b) -> a == Done (Win player)) alt
-        
-        la = map (\(a,b) -> (whoWins a, b)) sub
-        
+        alt = [(winner a, b) | (a,b) <- sub]
         -- v = if player == O then lambO else lambX
         shut = if player == O then foldl1 lambO la else foldl1 lambX la
+        la = map (\(a,b) -> (whoWins a, b)) sub
+        sub :: [(Game, Move)]
+        sub = [((perfectMove (fst game) (a,b) player, (otherPlayer, a)),(a,b)) | (a,b) <- moves]
+        otherPlayer = getOtherP player
+        player = fst $ snd game
+        moves = legalMoves game
 
         -- shut = map
             --

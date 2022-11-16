@@ -107,7 +107,7 @@ lMoveHelper:: a -> b -> (a,b)
 lMoveHelper a b = (a,b)
 
 -- legalMoves :: BBoard -> Turn -> [Move]
-legalMoves :: Game -> [Move]
+legalMoves :: Game -> [Move] 
 -- legalMoves (bboard, turn)
 legalMoves (board,turn)
             | not ((snd turn) `elem` (validLBoard board)) = concat (map (legalMoves) [(board, x)|x<-(listTurn turn board)])
