@@ -95,15 +95,15 @@ milestoneOne =
             it "Top left full" $ do
                 legalMoves ([(0,[(z,X) | z <- [0..8]])],(X,0)) `shouldBe` [(x,y) | x <- [1..8], y <- [0..8]]
                 
-        -- describe "Make move" $ do
-        --     it "empty X top left" $ do
-        --         makeMove ([],(X,0)) (0,0) `shouldBe` Just [(0,[(0,X)])]
-        --     it "empty O bottom right" $ do
-        --         makeMove ([],(O,8)) (8,8) `shouldBe` Just [(8,[(8,O)])]
-        --     it "full board" $ do
-        --         makeMove (testBoardX,(X,4)) (4,4) `shouldBe` Nothing
-        --     it "incorrect space" $ do
-        --         makeMove ([],(X,0)) (8,8) `shouldBe` Nothing
+        describe "Make move" $ do
+            it "empty X top left" $ do
+                makeMove ([],(X,0)) (0,0) `shouldBe` Just ([(0,[(0,X)])],(O,0))
+            it "empty O bottom right" $ do
+                makeMove ([],(O,8)) (8,8) `shouldBe` Just ([(8,[(8,O)])],(X,8))
+            it "full board" $ do
+                makeMove (testBoardX,(X,4)) (4,4) `shouldBe` Nothing
+            it "incorrect space" $ do
+                makeMove ([],(X,0)) (8,8) `shouldBe` Nothing
 
 milestoneTwo = 
     do
@@ -117,8 +117,8 @@ milestoneTwo =
             it "full board shouldn't be empty" $ do
                 readGame "XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nO\n8" `shouldNotBe` ([],(O,8))
         describe "Who Wins" $ do
-            -- it "diagonal of X's on X's turn" $ do
-            --     whoWins ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` Win X
+            it "short time" $ do
+                whoWins ([(x,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]) | x <- [1,2,3,5,6,7]] ++[(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` Win X
             it "horizontal of X's on X's turn" $ do
                 whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` Win X
             it "horizontal of X's on X's turn" $ do
@@ -128,13 +128,17 @@ milestoneTwo =
             it "diagonal of X's with forced win for X" $ do
                 whoWins forceWinX  `shouldBe` Win X
             it "top left tie" $ do
-                whoWins ([(0,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]),(6,[(0,X),(1,X),(2,X)]),(7,[(0,X),(2,X),(6,X),(8,X)]), (8,[(0,X),(2,X),(6,X),(8,X)])],(X,8)) `shouldBe` Win X
+                whoWins ([(x,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]) | x <- [0..5]] ++ [(6,[(0,X),(1,X),(2,X)]),(7,[(0,X),(2,X),(6,X),(8,X)]), (8,[(0,X),(2,X),(6,X),(8,X)])],(X,8)) `shouldBe` Win X
             it "force game middle" $ do
                 whoWins (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldBe` Win X
             it "win deep" $ do
                 whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(8,X)])] ++  [(8,[(0,X),(4,O),(8,X)])],(X,8)) `shouldBe` Win X
             it "always lose" $ do
+                whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(6,X),(8,X)])],(O,8)) `shouldBe` Win X
+            it "always lose v2" $ do
                 whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(2,X),(8,X)])],(O,8)) `shouldBe` Win X
+            it "always lose win O" $ do
+                whoWins (tieTop ++ [(6,[(0,O),(1,O),(2,O)])] ++ [(7,[(0,O),(1,O),(2,O),(8,O)])] ++  [(8,[(0,O),(2,O),(8,O)])],(X,8)) `shouldBe` Win O
 
         describe "Best Move" $ do
             it "diagonal of X's on X's turn" $ do
@@ -150,7 +154,7 @@ milestoneTwo =
             it "three corners" $ do
                 bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(2,X),(8,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,4),(8,5)])
             it "x corner start" $ do
-                bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(7,O)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,2),(8,2),(8,4),(8,6)])
+                bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(7,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,4),(8,6)])
             it "force game middle" $ do
                 bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,3),(8,4),(8,5),(8,6),(8,7)])
             it "win deep" $ do

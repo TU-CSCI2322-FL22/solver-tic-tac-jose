@@ -16,29 +16,67 @@ curOutcome :: Player -> [Outcome] -> Outcome
 curOutcome player winners | Win player `elem` winners = Win player
                           | Tie `elem` winners = Tie
                           | player == X = Win O
-                          | otherwise = Win X
-whoWins :: Game -> Outcome
-whoWins gameState@(board, (player, req)) =
+                        --   | player == O = Win X
+                          | otherwise = Win X --error "yo this didn't work bro"
+whoWillWins :: Game -> Outcome
+whoWillWins gameState@(board, (player, req)) =
     case winner gameState of 
         Done result -> result
         Going -> let valMoves = legalMoves gameState
                      valGames = catMaybes (map (\m -> makeMove gameState m) valMoves)
                     in curOutcome player (map whoWins valGames)
 
--- lambX symbol (a,c) (b,d) =
---     case (a,b) of 
---         (Win X, _) -> (Win X, c)
---         (_, Win X) -> (Win X, d)
---         (_, Tie) -> (Tie, d)
---         _ -> (Win O, c)
+-- -- whoWon :: Game -> Outcome
+-- whoWon gameState@(board, (player, req)) =
+--     case winner gameState of 
+--         -- Done result -> result
+--         Going -> let valMoves = legalMoves gameState
+--                      in catMaybes (map (\m -> makeMove gameState m) valMoves)
+--                     -- in WicurOutcome player (map whoWins valGames)
 
-lambO symbol (a,c) (b,d) =
+compress :: [Outcome] -> Outcome
+compress lst
+    | Win X `elem` lst = Win X
+    | Win O `elem` lst = Win O
+    | Tie `elem` lst = Tie
+    | otherwise = Tie
+
+-- Write  a function "who will win" that takes a Game and returns an Outcome. 
+whoWins :: Game -> Outcome
+whoWins game =
+    case winner game of
+        Done (Win X) -> Win X
+        Done (Win O) -> Win O
+        Done Tie -> Tie
+        _ -> fool
+    where
+        moves = legalMoves game
+        other = getOtherP (fst $ snd game)
+        getGame = [(perfectMove (fst game) (a,b) (fst $ snd game), (other, a)) | (a,b) <- moves]
+        recur = map whoWins getGame
+        fool = compress recur
+
+lambX (a,c) (b,d) =
+    case (a,b) of 
+        (Win X, _) -> (Win X, c)
+        (_, Win X) -> (Win X, d)
+        (_, Tie) -> (Tie, d)
+        _ -> (Win O, c)
+
+lambO (a,c) (b,d) =
+    case (a,b) of 
+        (Win O, _) -> (Win O, c)
+        (_, Win O) -> (Win O, d)
+        (_, Tie) -> (Tie, d)
+        _ -> (Win X, c)
+
+lamb symbol (a,c) (b,d) =
     case (a,b) of 
         (Win symbol, _) -> (Win symbol, c)
         (_, Win symbol) -> (Win symbol, d)
         (Tie, Tie) -> (Tie, d)
-        (Win other, Tie) -> (Tie, d)
-        _ -> (Win other, c)
+        -- (Win other, Tie) -> (Tie, d)
+        -- _ -> (Win other, c)
     where
         other = getOtherP symbol
 
@@ -60,10 +98,15 @@ bestMove game =
 
         alt = [(winner a, b) | (a,b) <- sub]
         z = filter (\(a,b) -> a == Done (Win player)) alt
-
-        la = map (\(a,b) -> (whoWins a, b)) sub
         
-        shut = if null la then (-1,-1) else snd $ foldr1 (lambO player) la
+        la = map (\(a,b) -> (whoWins a, b)) sub
+
+        -- v = if player == O then lambO else lambX
+        shut = if player == O then foldl1 lambO la else foldl1 lambX la
+
+        -- shut = map
+            --
+        --foldr1 (lamb player) la
             -- if player == O then foldl1 lambO la else foldl1 lambX la
 
     -- in if null z then snd shut else snd $ head z
