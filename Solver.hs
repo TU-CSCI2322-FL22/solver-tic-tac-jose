@@ -75,8 +75,6 @@ lamb symbol (a,c) (b,d) =
         (Win symbol, _) -> (Win symbol, c)
         (_, Win symbol) -> (Win symbol, d)
         (Tie, Tie) -> (Tie, d)
-        -- (Win other, Tie) -> (Tie, d)
-        -- _ -> (Win other, c)
     where
         other = getOtherP symbol
 
@@ -91,7 +89,7 @@ bestMove game =
         player = fst $ snd game
         moves = legalMoves game
 
-        other = getOtherP player
+        other = getOtherP player    
 
         sub :: [(Game, Move)]
         sub = [((perfectMove (fst game) (a,b) player, (other, a)),(a,b)) | (a,b) <- moves]
@@ -103,12 +101,5 @@ bestMove game =
 
         -- v = if player == O then lambO else lambX
         shut = if player == O then foldl1 lambO la else foldl1 lambX la
-
-        -- shut = map
-            --
-        --foldr1 (lamb player) la
-            -- if player == O then foldl1 lambO la else foldl1 lambX la
-
-    -- in if null z then snd shut else snd $ head z
 
 
