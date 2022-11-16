@@ -46,7 +46,7 @@ lambO symbol (a,c) (b,d) =
 bestMove :: Game -> Move
 bestMove game =
     case null z of
-        True -> snd shut
+        True -> shut
         False -> snd $ head z
 
     where 
@@ -63,7 +63,7 @@ bestMove game =
 
         la = map (\(a,b) -> (whoWins a, b)) sub
         
-        shut = foldr1 (lambO player) la
+        shut = if null la then (-1,-1) else snd $ foldr1 (lambO player) la
             -- if player == O then foldl1 lambO la else foldl1 lambX la
 
     -- in if null z then snd shut else snd $ head z

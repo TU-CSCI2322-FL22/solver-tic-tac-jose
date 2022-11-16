@@ -129,7 +129,7 @@ moveIO str file =
         -- let [a,b] = splitOn "," str
         --     (x,y) = ((read a) - 1, (read b) - 1)
         -- (board, (player, place)) <- loadGame file
-        -- let z = makeMove (board, ( (if player == X then O else X),place)) (x,y)
+        -- let z = makeMove (board, ((if player == X then O else X),place)) (x,y)
         -- case z of
         --     Just z -> do putStrLn $ prettyBoard z
         --     Nothing -> do ioError $ userError "move could not be made!"
@@ -140,11 +140,17 @@ winIO file =
         game <- loadGame file
         print $ bestMove game
 
-defaultIO :: String -> IO()
+defaultIO :: FilePath -> IO()
 defaultIO x =
     do 
         a <- loadGame x
-        putStrLn $ prettyGame a
+        case winner a of
+            Done (Win X) -> print "game has won by X"
+            Done (Win O) -> print "game has won by O"
+            Done Tie -> print "game has tie"
+            Going -> print $ bestMove a
+        -- if winner a == Done () then print "game has already finished"
+        -- print $ bestMove a
 
 noneIO :: IO()
 noneIO = 
