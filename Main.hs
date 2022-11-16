@@ -138,7 +138,12 @@ winIO :: FilePath -> IO()
 winIO file =
     do
         game <- loadGame file
-        print $ bestMove game
+        let c = bestMove game
+        case winner game of
+            Done (Win X) -> print "x has already won"
+            Done (Win O) -> print "o has already won"
+            Done Tie -> putStrLn "the game has tied"
+            Going -> if c == (-1,-1) then putStrLn "the game will tie" else print c
 
 defaultIO :: FilePath -> IO()
 defaultIO x =
@@ -149,9 +154,7 @@ defaultIO x =
             Done (Win O) -> print "game has won by O"
             Done Tie -> print "game has tie"
             Going -> print $ bestMove a
-        -- if winner a == Done () then print "game has already finished"
-        -- print $ bestMove a
-
+            
 noneIO :: IO()
 noneIO = 
     putStrLn "jose: no command given (try --help)"
