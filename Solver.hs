@@ -84,7 +84,7 @@ lamb symbol (a,c) (b,d) =
 bestMove :: Game -> Move
 bestMove game =
     case null z of
-        True -> snd shut
+        True -> shut
         False -> snd $ head z
 
     where 
@@ -100,7 +100,7 @@ bestMove game =
         z = filter (\(a,b) -> a == Done (Win player)) alt
         
         la = map (\(a,b) -> (whoWins a, b)) sub
-        
+
         -- v = if player == O then lambO else lambX
         shut = if player == O then foldl1 lambO la else foldl1 lambX la
 
