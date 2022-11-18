@@ -94,7 +94,7 @@ littleWinner board =
                 (False, True) -> Just O
                 _ -> Nothing
 
-validLBoard board = [0..8]\\[fst x |x <- board, littleWinner (snd x) /= Nothing]
+validLBoard board = [0..8]\\[fst x |x <- board, littleWinner (snd x) /= Nothing || length (snd x)==9]
 -- lboard without winner
 
 makeTurn :: Player -> Integer -> (Player,Integer)
