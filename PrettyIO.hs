@@ -43,8 +43,12 @@ ioGame game =
 
 prettyGame :: Game -> String
 prettyGame (board, (symbol, num)) =
-    prettyBoard board ++ "\n" ++  show symbol ++ "\n" ++ show num
+    prettyBoard board ++ "\n" ++  show symbol ++ "\n" ++ show (num+1)
 
+prettyGameOutput :: Game -> String
+prettyGameOutput (board, (symbol, num)) =
+    prettyBoard board ++ "\n" ++  show symbol ++ "\n" ++ show (num+1)
+    
 writePretty :: Game -> FilePath -> IO ()
 writePretty game file =
     writeFile file $ prettyGame game
