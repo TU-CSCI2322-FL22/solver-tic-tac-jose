@@ -105,3 +105,6 @@ bestMove game =
           | otherwise = foldl1 lambX la
 
 
+-- Evaluation Function
+evalBoard :: Game -> Integer
+evalBoard = undefined
