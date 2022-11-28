@@ -105,3 +105,43 @@ bestMove game =
           | otherwise = foldl1 lambX la
 
 
+-- the integer is the rating
+nMoves :: Game -> Integer -> (Integer, Move)
+nMoves game 1 =
+    let player = fst $ snd game
+        moves = legalMoves game
+
+        madeMoves = mapMaybe (makeMove game) moves -- makes the moves for all legal moves
+        post = zip madeMoves moves -- zips them together to make it for all
+
+        rated = if null post then (-9999,(-1,-1)) else maximum $ map (\(b,c) -> (rateMove b, c)) post -- finds the largest rating and returns it
+
+    in rated
+
+nMoves game n =
+    case null $ legalMoves game of
+        True -> (-9999,(-1,-1))
+        False -> v
+
+    where 
+        player = fst $ snd game
+        moves = legalMoves game
+
+        madeMoves = mapMaybe (makeMove game) moves -- makes the moves for all legal moves
+
+        v = maximum [nMoves x (n-1) | x <- madeMoves]
+
+        -- nMoves
+
+    -- in v
+
+--     where
+--         player = fst $ snd game
+
+
+rateMove :: Game -> Integer
+rateMove (game, (player, num)) =
+    let squareWins = mapMaybe (\(a,b) -> littleWinner b) game
+        xFactor = fromIntegral $ length $ filter (==X) squareWins
+        yFactor = fromIntegral $ length $ filter (==O) squareWins
+    in xFactor - yFactor
