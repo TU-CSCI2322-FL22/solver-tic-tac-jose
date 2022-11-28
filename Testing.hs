@@ -18,7 +18,7 @@ import Data.Maybe (Maybe(Nothing))
 import Data.Bool (Bool(True))
 import PrettyIO
 import Solver
-import Solver (bestMove)
+import Solver (bestMove, nMoves)
 
 -- when some are filled in feel free to comment ot tests here
 testBoardOne = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
@@ -165,6 +165,19 @@ milestoneTwo =
                 bestMove (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(2,X),(8,X)])],(O,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,3),(8,4),(8,5),(8,6),(8,7)])
             it "game can't be won by anyone" $ do
                 bestMove ([(0,[(0,O),(1,X),(2,X),(3,X),(4,O),(5,O),(6,O),(7,X),(8,X)]),(1,[(0,O),(1,X),(2,X),(3,X),(4,O),(5,O),(6,O),(7,X),(8,X)]),(2,[(0,O),(1,X),(2,X),(3,X),(4,O),(5,O),(6,O),(7,X),(8,X)]),(3,[(0,O),(1,X),(2,X),(3,X),(4,O),(5,O),(6,O),(7,X),(8,X)]),(4,[(0,O),(1,X),(2,X),(3,X),(4,O),(5,O),(6,O),(7,X),(8,X)]),(5,[(0,O),(1,X),(2,X),(3,X),(4,O),(5,O),(6,O),(7,X),(8,X)]),(6,[(0,O),(1,X),(2,X),(3,X),(4,O),(5,O),(6,O),(7,X),(8,X)]),(7,[(0,O),(1,X),(2,X),(3,X),(4,O),(5,O),(6,O),(7,X),(8,X)]),(8,[(0,O),(1,X),(2,X),(3,X),(4,O),(5,O),(6,X),(7,X)])],(O,5)) `shouldBe` (8,8)
+
+milestoneThree = 
+    do
+        describe "nMoves should finish in time" $ do
+            it "short on empty - 3" $ do
+                nMoves ([],(X,5)) 3 `shouldBe` nMoves ([],(X,5)) 3
+            it "short on empty - 4" $ do
+                nMoves ([],(X,5)) 4 `shouldBe` nMoves ([],(X,5)) 4
+            it "short on empty - 5" $ do
+                nMoves ([],(X,5)) 5 `shouldBe` nMoves ([],(X,5)) 5
+            it "short on empty - 6" $ do
+                nMoves ([],(X,5)) 6 `shouldBe` nMoves ([],(X,5)) 6
+   
 runTests :: IO()
 runTests =   
     withArgs [] $ hspec $ do
@@ -172,3 +185,5 @@ runTests =
             milestoneOne
         describe "Milestone 2" $ do
             milestoneTwo
+        describe "Milestone 3" $ do
+            milestoneThree
