@@ -19,6 +19,7 @@ import GHC.IO.Exception (userError)
 -- import Data.ByteString (putStrLn)
 import Data.List.Split
 import Solver (bestMove)
+import PrettyIO (prettyGameOutput)
 
 -- https://downloads.haskell.org/~ghc/4.06/docs/hslibs/sec-getopt.html
 
@@ -29,7 +30,6 @@ data Options = Options {
   , optMove              :: String
   , optVerbose           :: Bool
   , optInt               :: Bool
-  , optPrint             :: FilePath
 } deriving Show
 
 defaultOptions :: Options
@@ -40,20 +40,18 @@ defaultOptions = Options {
    , optMove = ""
    , optVerbose = False
    , optInt = False
-   , optPrint = ""
  }
 
 options :: [OptDescr (Options -> Options)]
 options = [
-    Option ['h'] ["help"] (NoArg (\opts -> opts { optHelp = True})) "Print a help message and exit.",
     Option ['w'] ["winner"] (NoArg (\opts -> opts {optWin = True})) "Prints the best move",
+    Option ['h'] ["help"] (NoArg (\opts -> opts { optHelp = True})) "Prints a help message and exit.",
 
     Option ['d'] ["depth"] (ReqArg (\depth opts -> opts { optDepth = read depth }) "N") "cutoff depth",
     Option ['m'] ["move"] (ReqArg (\move opts -> opts { optMove = move }) "X,Y") "Make's move and prints board",
 
     Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move",
-    Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play",
-    Option ['p'] ["print"] (ReqArg (\path opts -> opts {optPrint = path}) "DIR") "pretty prints a given board"
+    Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play"
     ]
 
 compilerOpts :: [String] -> IO (Options, [String])
@@ -93,9 +91,6 @@ main = do
     -- else if optTest opts
     -- then do testIO
 
-    else if optPrint opts /= ""
-    then do printIO (optPrint opts)
-
     else if optWin opts
     then do winIO file
 
@@ -111,6 +106,7 @@ main = do
         (x:xs) -> helpIO
         _ ->  noneIO
 
+
 helpIO :: IO()
 helpIO = putStrLn $ usageInfo usage options
     where usage = "Usage: classifier [OPTION...]"
@@ -125,14 +121,14 @@ printIO str =
 moveIO :: String -> FilePath -> IO()
 moveIO str file =
     do 
-        putStrLn "yoink"
-        -- let [a,b] = splitOn "," str
-        --     (x,y) = ((read a) - 1, (read b) - 1)
-        -- (board, (player, place)) <- loadGame file
-        -- let z = makeMove (board, ((if player == X then O else X),place)) (x,y)
-        -- case z of
-        --     Just z -> do putStrLn $ prettyBoard z
-        --     Nothing -> do ioError $ userError "move could not be made!"
+        -- putStrLn "yoink"
+        let [a,b] = splitOn "," str
+            (x,y) = ((read a) - 1, (read b) - 1)
+        (board, (player, place)) <- loadGame file
+        let z = makeMove (board, ((if player == X then O else X),place)) (x,y)
+        case z of
+            Just z -> do putStrLn $ prettyGameOutput z
+            Nothing -> do ioError $ userError "move could not be made!"
 
 winIO :: FilePath -> IO()
 winIO file =
