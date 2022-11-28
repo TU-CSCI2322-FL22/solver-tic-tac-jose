@@ -125,7 +125,7 @@ moveIO str file =
         let [a,b] = splitOn "," str
             (x,y) = ((read a) - 1, (read b) - 1)
         (board, (player, place)) <- loadGame file
-        let z = makeMove (board, ((if player == X then O else X),place)) (x,y)
+        let z = makeMove (board, (player,place)) (x,y)
         case z of
             Just z -> do putStrLn $ prettyGameOutput z
             Nothing -> do ioError $ userError "move could not be made!"

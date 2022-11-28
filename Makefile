@@ -20,5 +20,6 @@ all: build
 # Cleaning commands:
 clean:
 	rm -f $(name)
+	rm -f ./esoj.exe
 	rm -f *.hi
 	rm -f *.o
