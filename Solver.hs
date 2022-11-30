@@ -106,5 +106,9 @@ bestMove game =
 
 
 -- Evaluation Function
+-- use function that checks for winner as base for the function
+lboardEval :: Lboard -> Integer
+lboardEval little = undefined
+
 evalBoard :: Game -> Integer
-evalBoard = undefined
+evalBoard (bBoard, t) = 
