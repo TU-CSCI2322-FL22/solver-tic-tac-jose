@@ -67,29 +67,19 @@ compilerOpts argv =
 main :: IO ()
 main = do
     args <- getArgs
-    -- putStrLn $ show args
 
-    -- putStrLn $ show $ (head . head) args
-    -- putStrLn $ show $ (tail) args
-    (opts, errs) <- if null args || ((head . head) args == '-') then compilerOpts args else compilerOpts $ tail args
-    
-    --SNAGS FILE STRING
-    let file = if null args || null (head args) then "" else (if (head . head) args == '-' then "" else (head args))
+    (opts,n) <- compilerOpts args
+    -- putStrLn $ show opts
+    -- putStrLn $ show n
 
-    --SEARCHES FOR ERRORS
-    if not (null errs)
-    then do
-        mapM putStrLn errs
-        error "errors were thrown on input"
-        return ()
 
+    -- let file = if length n > 1 then error "too manyhead" else n
+    let file = head n
+    --fogarty said this was ok, could fix someday
     --CHECKS IF HELP IO IS RUN
-    else if optHelp opts
-    then helpIO
 
-    --CHECKS IF TEST IO IS RUN
-    -- else if optTest opts
-    -- then do testIO
+    if optHelp opts
+    then helpIO
 
     else if optWin opts
     then do winIO file
