@@ -145,3 +145,42 @@ rateMove (game, (player, num)) =
         xFactor = fromIntegral $ length $ filter (==X) squareWins
         yFactor = fromIntegral $ length $ filter (==O) squareWins
     in xFactor - yFactor
+
+subList :: Eq a => [a] -> [a] -> Bool
+subList [] [] = True
+subList _ []    = False
+subList [] _    = True
+subList (x:xs) (y:ys) 
+    | x == y    = subList xs ys   
+    | otherwise = subList (x:xs) ys
+
+checkSmallWin :: LBoard -> State
+checkSmallWin [] = Going
+checkSmallWin board | any (\x -> subList x xNums) wins = Done (Win X)
+                  | any (\x -> subList x oNums) wins = Done (Win O)
+                  | subList [0..8] allNums           = Done (Tie)
+                  | otherwise                        = Going 
+           where allNums = map fst board 
+                 xNums   = [num | (num, player) <- board, player == X]  
+                 oNums   = [num | (num, player) <- board, player == O]
+eval1 :: [LBoard] -> Integer
+eval1 [] = 0
+eval1 (sb:sbs) = case checkSmallWin sb of 
+                        Done (Win X) -> 100 + eval1 sbs
+                        Done (Win O) -> (-100) + eval1 sbs
+                        _ -> eval2 sb + eval1 sbs
+wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]]
+eval2 :: LBoard -> Integer
+eval2 sBoard = sum $ map helper outOwners
+            where outOwners = [[lookup x sBoard | x <- outs] | outs <- wins]
+                  helper :: [Maybe Player] -> Integer
+                  helper ms | Just X `elem` ms && Just O `elem` ms = 0
+                            | length (filter (\p -> p /= Nothing) ms) /= 2 = 0
+                            | otherwise = if Just X `elem` ms then 5 else -5
+
+eval :: Game -> Integer 
+eval gState@(board, (pl, req)) | current == Done (Win X) = 10000
+                               | current == Done (Win O) = -10000
+                               | current == Going = 0
+                               | otherwise = eval1 (map snd board)
+                               where current = winner gState
