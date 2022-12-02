@@ -29,7 +29,6 @@ data Options = Options {
   , optMove              :: String
   , optVerbose           :: Bool
   , optInt               :: Bool
-  , optPrint             :: FilePath
 } deriving Show
 
 defaultOptions :: Options
@@ -40,22 +39,20 @@ defaultOptions = Options {
    , optMove = ""
    , optVerbose = False
    , optInt = False
-   , optPrint = ""
  }
 
 options :: [OptDescr (Options -> Options)]
 options = [
-    Option ['h'] ["help"] (NoArg (\opts -> opts { optHelp = True})) "Print a help message and exit.",
     Option ['w'] ["winner"] (NoArg (\opts -> opts {optWin = True})) "Prints the best move",
+    Option ['h'] ["help"] (NoArg (\opts -> opts { optHelp = True})) "Prints a help message and exit.",
 
     Option ['d'] ["depth"] (ReqArg (\depth opts -> opts { optDepth = read depth }) "N") "cutoff depth",
     Option ['m'] ["move"] (ReqArg (\move opts -> opts { optMove = move }) "X,Y") "Make's move and prints board",
 
     Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move",
-    Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play",
-    Option ['p'] ["print"] (ReqArg (\path opts -> opts {optPrint = path}) "DIR") "pretty prints a given board"
+    Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play"
     ]
-    
+
 compilerOpts :: [String] -> IO (Options, [String])
 compilerOpts argv =
   case getOpt Permute options argv of
@@ -69,24 +66,19 @@ compilerOpts argv =
 main :: IO ()
 main = do
     args <- getArgs
-    -- putStrLn $ show args
 
-    -- putStrLn $ show $ (head . head) args
-    -- putStrLn $ show $ (tail) args
-    (opts, errs) <- if null args || ((head . head) args == '-') then compilerOpts args else compilerOpts $ tail args
-    
-    --SNAGS FILE STRING
-    let file = if null args || null (head args) then "" else (if (head . head) args == '-' then "" else (head args))
+    (opts,n) <- compilerOpts args
+    -- putStrLn $ show opts
+    -- putStrLn $ show n
 
-    --SEARCHES FOR ERRORS
-    if not (null errs)
-    then do
-        mapM putStrLn errs
-        error "errors were thrown on input"
-        return ()
 
+    -- let file = if length n > 1 then error "too manyhead" else n
+    let file = head n
+    --fogarty said this was ok, could fix someday
     --CHECKS IF HELP IO IS RUN
-    else if optHelp opts
+    --SEARCHES FOR ERRORS
+
+    if optHelp opts
     then helpIO
 
     --CHECKS IF TEST IO IS RUN
