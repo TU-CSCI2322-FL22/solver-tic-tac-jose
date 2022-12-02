@@ -18,7 +18,7 @@ import PrettyIO
 import GHC.IO.Exception (userError)
 -- import Data.ByteString (putStrLn)
 import Data.List.Split
-import Solver (bestMove)
+import Solver
 
 -- https://downloads.haskell.org/~ghc/4.06/docs/hslibs/sec-getopt.html
 

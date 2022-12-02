@@ -107,12 +107,12 @@ bestMove game =
 
 -- Evaluation Function
 -- use function that checks for winner as base for the function
-lboardEval :: Lboard -> Integer
+lboardEval :: LBoard -> Integer
 lboardEval little
     | win == Just X = (scoreX+3) - scoreO
     | win == Just O = scoreX - (scoreO+3)
     | otherwise = countPlayer little 0 0 
-    where countPlayer :: Lboard -> Integer -> Integer -> Integer
+    where countPlayer :: LBoard -> Integer -> Integer -> Integer
           countPlayer [] x o
             | x > o = (scoreX+1) - scoreO
             | o == x = 0
