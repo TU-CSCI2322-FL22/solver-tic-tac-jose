@@ -55,7 +55,7 @@ options = [
     Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play",
     Option ['p'] ["print"] (ReqArg (\path opts -> opts {optPrint = path}) "DIR") "pretty prints a given board"
     ]
-
+    
 compilerOpts :: [String] -> IO (Options, [String])
 compilerOpts argv =
   case getOpt Permute options argv of
@@ -93,11 +93,11 @@ main = do
     -- else if optTest opts
     -- then do testIO
 
-    else if optPrint opts /= ""
-    then do printIO (optPrint opts)
-
     else if optWin opts
     then do winIO file
+
+    else if optDepth opts /= 0
+    then do depthIO (optDepth opts) (optVerbose opts) file
 
     --CHECKS FOR MOVE IO -- THEN MAKES THE MOVE
     else if optMove opts /= ""
@@ -111,6 +111,7 @@ main = do
         (x:xs) -> helpIO
         _ ->  noneIO
 
+
 helpIO :: IO()
 helpIO = putStrLn $ usageInfo usage options
     where usage = "Usage: classifier [OPTION...]"
@@ -121,18 +122,27 @@ printIO str =
         a <- loadGame str
         putStrLn $ prettyGame a 
 
+depthIO :: Integer -> Bool -> FilePath -> IO()
+depthIO num verb file =
+    do 
+        a <- loadGame file
+        case verb of
+            False -> print $ snd $ nMoves a num
+            True -> print $ "a rating of " ++ (show . fst $ nMoves a num) ++ " on the " ++ (show . snd $ nMoves a num)
+
+
 
 moveIO :: String -> FilePath -> IO()
 moveIO str file =
     do 
-        putStrLn "yoink"
-        -- let [a,b] = splitOn "," str
-        --     (x,y) = ((read a) - 1, (read b) - 1)
-        -- (board, (player, place)) <- loadGame file
-        -- let z = makeMove (board, ((if player == X then O else X),place)) (x,y)
-        -- case z of
-        --     Just z -> do putStrLn $ prettyBoard z
-        --     Nothing -> do ioError $ userError "move could not be made!"
+        -- putStrLn "yoink"
+        let [a,b] = splitOn "," str
+            (x,y) = ((read a) - 1, (read b) - 1)
+        (board, (player, place)) <- loadGame file
+        let z = makeMove (board, (player,place)) (x,y)
+        case z of
+            Just z -> do putStrLn $ prettyGameOutput z
+            Nothing -> do ioError $ userError "move could not be made!"
 
 winIO :: FilePath -> IO()
 winIO file =

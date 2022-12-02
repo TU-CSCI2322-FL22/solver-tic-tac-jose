@@ -128,3 +128,66 @@ lboardEval little
 
 evalBoard :: Game -> Integer
 evalBoard (bBoard, t) = sum [ lboardEval board | (pos, board) <- bBoard]
+
+
+
+-- the integer is the rating
+nMoves :: Game -> Integer -> (Integer, Move)
+nMoves game 1 =
+    let player = fst $ snd game
+        moves = legalMoves game
+
+        madeMoves = mapMaybe (makeMove game) moves -- makes the moves for all legal moves
+        post = zip madeMoves moves -- zips them together to make it for all
+
+        rated = if null post then (-9999,(-1,-1)) else maximum $ map (\(b,c) -> (evalBoard b, c)) post -- finds the largest rating and returns it
+
+    in rated
+
+nMoves game n =
+    case null $ legalMoves game of
+        True -> (-9999,(-1,-1))
+        False -> v
+
+    where 
+        player = fst $ snd game
+        moves = legalMoves game
+
+        madeMoves = mapMaybe (makeMove game) moves -- makes the moves for all legal moves
+
+        v = maximum [nMoves x (n-1) | x <- madeMoves]
+
+        -- nMoves
+
+    -- in v
+
+--     where
+--         player = fst $ snd game
+
+
+-- rateMove :: Game -> Integer
+-- rateMove (game, (player, num)) =
+--     let squareWins = mapMaybe (\(a,b) -> littleWinner b) game
+--         xFactor = fromIntegral $ length $ filter (==X) squareWins
+--         yFactor = fromIntegral $ length $ filter (==O) squareWins
+--     in xFactor - yFactor
+
+subList :: Eq a => [a] -> [a] -> Bool
+subList [] [] = True
+subList _ []    = False
+subList [] _    = True
+subList (x:xs) (y:ys) 
+    | x == y    = subList xs ys   
+    | otherwise = subList (x:xs) ys
+
+checkSmallWin :: LBoard -> State
+checkSmallWin [] = Going
+checkSmallWin board | any (\x -> subList x xNums) wins = Done (Win X)
+                  | any (\x -> subList x oNums) wins = Done (Win O)
+                  | subList [0..8] allNums           = Done (Tie)
+                  | otherwise                        = Going 
+           where allNums = map fst board 
+                 xNums   = [num | (num, player) <- board, player == X]  
+                 oNums   = [num | (num, player) <- board, player == O]
+
+wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]]
