@@ -18,6 +18,7 @@ import PrettyIO
 import GHC.IO.Exception (userError)
 -- import Data.ByteString (putStrLn)
 import Data.List.Split
+
 import Solver
 
 -- https://downloads.haskell.org/~ghc/4.06/docs/hslibs/sec-getopt.html
@@ -76,15 +77,10 @@ main = do
     let file = head n
     --fogarty said this was ok, could fix someday
     --CHECKS IF HELP IO IS RUN
-    --SEARCHES FOR ERRORS
 
     if optHelp opts
     then helpIO
-
-    --CHECKS IF TEST IO IS RUN
-    -- else if optTest opts
-    -- then do testIO
-
+    
     else if optWin opts
     then do winIO file
 
