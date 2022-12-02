@@ -140,7 +140,7 @@ nMoves game 1 =
         madeMoves = mapMaybe (makeMove game) moves -- makes the moves for all legal moves
         post = zip madeMoves moves -- zips them together to make it for all
 
-        rated = if null post then (-9999,(-1,-1)) else maximum $ map (\(b,c) -> (evalBoard b, c)) post -- finds the largest rating and returns it
+        rated = if null post then (0,(-1,-1)) else (if player == X then maximum $ map (\(b,c) -> (evalBoard b, c)) post else minimum $ map (\(b,c) -> (evalBoard b, c)) post)-- finds the largest rating and returns it
 
     in rated
 
@@ -155,7 +155,7 @@ nMoves game n =
 
         madeMoves = mapMaybe (makeMove game) moves -- makes the moves for all legal moves
 
-        v = maximum [nMoves x (n-1) | x <- madeMoves]
+        v = if player == X then maximum [nMoves x (n-1) | x <- madeMoves] else minimum [nMoves x (n-1) | x <- madeMoves]
 
         -- nMoves
 

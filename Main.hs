@@ -120,7 +120,7 @@ depthIO num verb file =
         a <- loadGame file
         case verb of
             False -> print $ snd $ nMoves a num
-            True -> print $ "a rating of " ++ (show . fst $ nMoves a num) ++ " on the " ++ (show . snd $ nMoves a num)
+            True -> putStrLn $ "a rating of " ++ (show . fst $ nMoves a num) ++ " on the " ++ (show . snd $ nMoves a num)
 
 
 
