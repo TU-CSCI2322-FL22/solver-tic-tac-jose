@@ -61,7 +61,7 @@ readPretty file = do
         purge str = 
             foldr1 (\a b -> a ++ "\n" ++ b) $ filter (/= "") $ lines $ filter (\a -> a /= ' ' && a /= '|' && a /= '=') str
 
-prettyGameOutput :: Game -> String
-prettyGameOutput (board, (symbol, num)) =
-    prettyBoard board ++ "\n" ++  show symbol ++ "\n" ++ show (num+1)
+-- prettyGameOutput :: Game -> String
+-- prettyGameOutput (board, (symbol, num)) =
+--     prettyBoard board ++ "\n" ++  show symbol ++ "\n" ++ show (num+1)
     

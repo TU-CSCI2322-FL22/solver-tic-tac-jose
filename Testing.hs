@@ -18,7 +18,7 @@ import Data.Maybe (Maybe(Nothing))
 import Data.Bool (Bool(True))
 import PrettyIO
 import Solver
-import Solver (bestMove)
+-- import Solver (bestMove)
 
 -- when some are filled in feel free to comment ot tests here
 testBoardOne = [(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X),(8,X)])]
