@@ -18,8 +18,8 @@ import PrettyIO
 import GHC.IO.Exception (userError)
 -- import Data.ByteString (putStrLn)
 import Data.List.Split
-import Solver (bestMove)
-import PrettyIO (prettyGameOutput)
+
+import Solver
 
 -- https://downloads.haskell.org/~ghc/4.06/docs/hslibs/sec-getopt.html
 
@@ -80,9 +80,12 @@ main = do
 
     if optHelp opts
     then helpIO
-
+    
     else if optWin opts
     then do winIO file
+
+    else if optDepth opts /= 0
+    then do depthIO (optDepth opts) (optVerbose opts) file
 
     --CHECKS FOR MOVE IO -- THEN MAKES THE MOVE
     else if optMove opts /= ""
@@ -106,6 +109,16 @@ printIO str =
     do
         a <- loadGame str
         putStrLn $ prettyGame a 
+
+depthIO :: Integer -> Bool -> FilePath -> IO()
+depthIO num verb file =
+    do 
+        a <- loadGame file
+        let j = nMoves a num
+        case (verb) of
+            False -> print $ snd $ nMoves a num
+            --True -> putStrLn $ "a rating of " ++ (show . fst $ nMoves a num) ++ " on the " ++ (show . snd $ nMoves a num)
+            True -> putStrLn $ if snd j == (-1,-1) then "game has already finished or will tie" else "a rating  of " ++ (show . fst $ j) ++ " on the " ++ (show . snd $ j)
 
 
 moveIO :: String -> FilePath -> IO()
