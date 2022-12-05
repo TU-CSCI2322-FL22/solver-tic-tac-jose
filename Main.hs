@@ -114,10 +114,11 @@ depthIO :: Integer -> Bool -> FilePath -> IO()
 depthIO num verb file =
     do 
         a <- loadGame file
-        case verb of
+        let j = nMoves a num
+        case (verb) of
             False -> print $ snd $ nMoves a num
-            True -> putStrLn $ "a rating of " ++ (show . fst $ nMoves a num) ++ " on the " ++ (show . snd $ nMoves a num)
-
+            --True -> putStrLn $ "a rating of " ++ (show . fst $ nMoves a num) ++ " on the " ++ (show . snd $ nMoves a num)
+            True -> putStrLn $ if snd j == (-1,-1) then "game has already finished or will tie" else "a rating  of " ++ (show . fst $ j) ++ " on the " ++ (show . snd $ j)
 
 
 moveIO :: String -> FilePath -> IO()
