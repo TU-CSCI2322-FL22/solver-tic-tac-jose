@@ -19,6 +19,8 @@ import GHC.IO.Exception (userError)
 -- import Data.ByteString (putStrLn)
 
 import Solver
+import Data.List.Split (splitOn)
+
 
 -- https://downloads.haskell.org/~ghc/4.06/docs/hslibs/sec-getopt.html
 
@@ -47,7 +49,7 @@ options = [
     Option ['d'] ["depth"] (ReqArg (\depth opts -> opts { optDepth = read depth }) "N") "cutoff depth",
     Option ['m'] ["move"] (ReqArg (\move opts -> opts { optMove = move }) "X,Y") "Make's move and prints board",
 
-    Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move",
+    Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move"
     ]
 
 compilerOpts :: [String] -> IO (Options, [String])

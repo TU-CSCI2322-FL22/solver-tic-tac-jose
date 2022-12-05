@@ -12,30 +12,10 @@ getOtherP::Player->Player
 getOtherP p
         | p == X = O
         | p == O = X
-curOutcome :: Player -> [Outcome] -> Outcome
-curOutcome player winners | Win player `elem` winners = Win player
-                          | Tie `elem` winners = Tie
-                          | player == X = Win O
-                        --   | player == O = Win X
-                          | otherwise = Win X --error "yo this didn't work bro"
-whoWillWins :: Game -> Outcome
-whoWillWins gameState@(board, (player, req)) =
-    case winner gameState of
-        Done result -> result
-        Going -> let valMoves = legalMoves gameState
-                     valGames = catMaybes (map (\m -> makeMove gameState m) valMoves)
-                    in curOutcome player (map whoWins valGames)
-
--- -- whoWon :: Game -> Outcome
--- whoWon gameState@(board, (player, req)) =
---     case winner gameState of 
---         -- Done result -> result
---         Going -> let valMoves = legalMoves gameState
---                      in catMaybes (map (\m -> makeMove gameState m) valMoves)
---                     -- in WicurOutcome player (map whoWins valGames)
 
 compress :: [Outcome] -> Outcome
 compress lst
+    | Win X `elem` lst && Win O `elem` lst = Tie
     | Win X `elem` lst = Win X
     | Win O `elem` lst = Win O
     | Tie `elem` lst = Tie
@@ -45,9 +25,7 @@ compress lst
 whoWins :: Game -> Outcome
 whoWins game =
     case winner game of
-        Done (Win X) -> Win X
-        Done (Win O) -> Win O
-        Done Tie -> Tie
+        Done result -> result
         _ -> fool
     where
         moves = legalMoves game
@@ -128,7 +106,6 @@ lboardEval little
 
 evalBoard :: Game -> Integer
 evalBoard (bBoard, t) = sum [ lboardEval board | (pos, board) <- bBoard]
-
 
 
 -- the integer is the rating
