@@ -93,6 +93,9 @@ main = do
     
     else if file /= ""
     then do winIO file
+    
+    else if optInt opts
+    then do interactiveIO
 
     else case args of 
         [x] -> defaultIO x
@@ -143,6 +146,11 @@ winIO file =
             Done (Win O) -> print "o has already won"
             Done Tie -> putStrLn "the game has tied"
             Going -> if c == (-1,-1) then putStrLn "the game will tie" else print c
+
+interactiveIO :: IO()
+interactiveIO =
+    do 
+        print "interactive mode has not been implemented D:"
 
 defaultIO :: FilePath -> IO()
 defaultIO x =
