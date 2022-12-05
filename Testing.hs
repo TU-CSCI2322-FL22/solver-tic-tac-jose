@@ -121,20 +121,20 @@ milestoneTwo =
         describe "Who Wins" $ do
             it "short time" $ do
                 whoWins ([(x,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]) | x <- [1,2,3,5,6,7]] ++[(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` Win X
-            it "horizontal of X's on X's turn" $ do
-                whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` Win X
-            it "horizontal of X's on X's turn" $ do
-                whoWins ([(0,[(0,X),(1,X),(2,X)]),(1,[(0,X),(1,X),(2,X)]),(2,[(0,X),(1,X)])],(X,2)) `shouldBe` Win X
-            it "vertical of X's on X's turn" $ do
-                whoWins ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` Win X
+            -- it "horizontal of X's on X's turn" $ do
+                -- whoWins ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` Win X
+            -- it "horizontal of X's on X's turn" $ do
+                -- whoWins ([(0,[(0,X),(1,X),(2,X)]),(1,[(0,X),(1,X),(2,X)]),(2,[(0,X),(1,X)])],(X,2)) `shouldBe` Win X
+            -- it "vertical of X's on X's turn" $ do
+                -- whoWins ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` Win X
             it "diagonal of X's with forced win for X" $ do
                 whoWins forceWinX  `shouldBe` Win X
             it "top left tie" $ do
                 whoWins ([(x,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]) | x <- [0..5]] ++ [(6,[(0,X),(1,X),(2,X)]),(7,[(0,X),(2,X),(6,X),(8,X)]), (8,[(0,X),(2,X),(6,X),(8,X)])],(X,8)) `shouldBe` Win X
             it "force game middle" $ do
                 whoWins (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldBe` Win X
-            it "win deep" $ do
-                whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(8,X)])] ++  [(8,[(0,X),(4,O),(8,X)])],(X,8)) `shouldBe` Win X
+            -- it "win deep" $ do
+                -- whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(8,X)])] ++  [(8,[(0,X),(4,O),(8,X)])],(X,8)) `shouldBe` Win X
             it "always lose" $ do
                 whoWins (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(6,X),(8,X)])],(O,8)) `shouldBe` Win X
             it "always lose v2" $ do
@@ -143,24 +143,24 @@ milestoneTwo =
                 whoWins (tieTop ++ [(6,[(0,O),(1,O),(2,O)])] ++ [(7,[(0,O),(1,O),(2,O),(8,O)])] ++  [(8,[(0,O),(2,O),(8,O)])],(X,8)) `shouldBe` Win O
 
         describe "Best Move" $ do
-            it "diagonal of X's on X's turn" $ do
-                bestMove ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` (8,8)
-            it "horizontal of X's on X's turn" $ do
-                bestMove ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` (8,2)
-            it "horizontal of X's on X's turn" $ do
-                bestMove ([(0,[(0,X),(1,X),(2,X)]),(1,[(0,X),(1,X),(2,X)]),(2,[(0,X),(1,X)])],(X,2)) `shouldBe` (2,2)
-            it "vertical of X's on X's turn" $ do
-                bestMove ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` (6,2)
-            it "top left tie" $ do
-                bestMove ([(0,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]),(6,[(0,X),(1,X),(2,X)]),(7,[(0,X),(2,X),(6,X),(8,X)]), (8,[(0,X),(2,X),(6,X),(8,X)])],(X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,3),(8,4),(8,5),(8,7)])
+            -- it "diagonal of X's on X's turn" $ do
+                -- bestMove ([(0,[(0,X),(4,X),(8,X)]), (4,[(0,X),(4,X),(8,X)]), (8,[(0,X),(4,X)])],(X,8)) `shouldBe` (8,8)
+            -- it "horizontal of X's on X's turn" $ do
+                -- bestMove ([(0,[(0,X),(1,X),(2,X)]), (4,[(0,X),(1,X),(2,X)]), (8,[(0,X),(1,X)])],(X,8)) `shouldBe` (8,2)
+            -- it "horizontal of X's on X's turn" $ do
+                -- bestMove ([(0,[(0,X),(1,X),(2,X)]),(1,[(0,X),(1,X),(2,X)]),(2,[(0,X),(1,X)])],(X,2)) `shouldBe` (2,2)
+            -- it "vertical of X's on X's turn" $ do
+                -- bestMove ([(0,[(0,X),(1,X),(2,X)]),(3,[(0,X),(1,X),(2,X)]),(6,[(0,X),(1,X)])],(X,6)) `shouldBe` (6,2)
+            -- it "top left tie" $ do
+                -- bestMove ([(0,[(0,X),(1,X),(2,O),(3,O),(4,O),(5,X),(6,X),(7,X),(8,O)]),(6,[(0,X),(1,X),(2,X)]),(7,[(0,X),(2,X),(6,X),(8,X)]), (8,[(0,X),(2,X),(6,X),(8,X)])],(X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,3),(8,4),(8,5),(8,7)])
             it "three corners" $ do
                 bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(2,X),(8,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,4),(8,5)])
             it "x corner start" $ do
                 bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(7,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,4),(8,6)])
             it "force game middle" $ do
                 bestMove (fillBoardDiagonalX ++ [(8,[(0,X),(4,O),(8,X)])], (X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,3),(8,4),(8,5),(8,6),(8,7)])
-            it "win deep" $ do
-                bestMove (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(8,X)])] ++  [(8,[(0,X),(4,O),(8,X)])],(X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,3),(8,5),(8,6),(8,7)]) 
+            -- it "win deep" $ do
+                -- bestMove (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(8,X)])] ++  [(8,[(0,X),(4,O),(8,X)])],(X,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,2),(8,3),(8,5),(8,6),(8,7)]) 
             it "always lose" $ do
                 bestMove (tieTop ++ [(6,[(0,X),(1,X),(2,X)])] ++ [(7,[(0,X),(1,X),(2,X),(8,X)])] ++  [(8,[(0,X),(2,X),(8,X)])],(O,8)) `shouldSatisfy` (\x -> x `elem` [(8,1),(8,3),(8,4),(8,5),(8,6),(8,7)])
             it "game can't be won by anyone" $ do

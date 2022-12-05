@@ -59,7 +59,28 @@ lamb symbol (a,c) (b,d) =
 -- Then write a function "best move" that takes a Game and return the best Move.
 bestMove :: Game -> Move
 bestMove game =
-    snd $ nMoves game 81
+    case null z of  
+    True -> snd shut
+    False -> snd $ head z
+
+    where
+        player = fst $ snd game
+        moves = legalMoves game
+
+        other = getOtherP player
+
+        sub :: [(Game, Move)]
+        sub = [((perfectMove (fst game) (a,b) player, (other, a)),(a,b)) | (a,b) <- moves]
+
+        z = filter (\(a,b) -> a == Done (Win player)) [(winner a, b) | (a,b) <- sub] -- in the case of winnner, play the winner
+        -- otherwise 
+
+        la = map (\(a,b) -> (whoWins a, b)) sub
+        shut
+          | null la = (Tie, (-1,-1))
+          | player == O = foldl1 lambO  la
+          | otherwise = foldl1 lambX la
+    -- snd $ nMoves game 81
 
 
 -- Evaluation Function
