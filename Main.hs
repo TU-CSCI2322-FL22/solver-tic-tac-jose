@@ -17,7 +17,6 @@ import FileIO (loadGame)
 import PrettyIO
 import GHC.IO.Exception (userError)
 -- import Data.ByteString (putStrLn)
-import Data.List.Split
 
 import Solver
 
@@ -29,7 +28,6 @@ data Options = Options {
   , optDepth             :: Integer
   , optMove              :: String
   , optVerbose           :: Bool
-  , optInt               :: Bool
 } deriving Show
 
 defaultOptions :: Options
@@ -39,7 +37,6 @@ defaultOptions = Options {
    , optDepth = 0
    , optMove = ""
    , optVerbose = False
-   , optInt = False
  }
 
 options :: [OptDescr (Options -> Options)]
@@ -51,7 +48,6 @@ options = [
     Option ['m'] ["move"] (ReqArg (\move opts -> opts { optMove = move }) "X,Y") "Make's move and prints board",
 
     Option ['v'] ["verbose"] (NoArg (\opts -> opts {optVerbose = True})) "Prints the best move",
-    Option ['i'] ["interactive"] (NoArg (\opts -> opts {optInt = True})) "Prompts interactive play"
     ]
 
 compilerOpts :: [String] -> IO (Options, [String])
@@ -94,9 +90,6 @@ main = do
     else if file /= ""
     then do winIO file
     
-    else if optInt opts
-    then do interactiveIO
-
     else case args of 
         [x] -> defaultIO x
         (x:xs) -> helpIO
@@ -146,11 +139,6 @@ winIO file =
             Done (Win O) -> print "o has already won"
             Done Tie -> putStrLn "the game has tied"
             Going -> if c == (-1,-1) then putStrLn "the game will tie" else print c
-
-interactiveIO :: IO()
-interactiveIO =
-    do 
-        print "interactive mode has not been implemented D:"
 
 defaultIO :: FilePath -> IO()
 defaultIO x =
